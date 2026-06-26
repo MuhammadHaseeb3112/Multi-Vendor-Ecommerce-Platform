@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MarketHub - Order Confirmation</title>
+
+    <style>
+        body{
+            margin:0;
+            padding:0;
+            background:#f4f6f9;
+            font-family:Arial,Helvetica,sans-serif;
+            color:#333;
+        }
+
+        .container{
+            max-width:700px;
+            margin:30px auto;
+            background:#fff;
+            border-radius:10px;
+            overflow:hidden;
+            box-shadow:0 5px 20px rgba(0,0,0,.08);
+        }
+
+        .header{
+            background:#00bcd4;
+            color:#fff;
+            text-align:center;
+            padding:30px;
+        }
+
+        .header h1{
+            margin:0;
+            font-size:30px;
+        }
+
+        .header p{
+            margin-top:8px;
+            opacity:.9;
+        }
+
+        .content{
+            padding:30px;
+        }
+
+        h2{
+            color:#00bcd4;
+            margin-top:0;
+        }
+
+        .section-title{
+            color:#00bcd4;
+            font-size:20px;
+            margin-top:30px;
+            margin-bottom:10px;
+            border-bottom:2px solid #eee;
+            padding-bottom:8px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:15px;
+        }
+
+        th{
+            background:#00bcd4;
+            color:#fff;
+            padding:12px;
+            text-align:left;
+        }
+
+        td{
+            padding:12px;
+            border-bottom:1px solid #eee;
+        }
+
+        .total{
+            text-align:right;
+            margin-top:20px;
+            font-size:22px;
+            font-weight:bold;
+            color:#00bcd4;
+        }
+
+        .status{
+            display:inline-block;
+            padding:8px 18px;
+            background:#fff3cd;
+            color:#856404;
+            border-radius:20px;
+            font-weight:bold;
+            margin-top:10px;
+        }
+
+        .footer{
+            background:#fafafa;
+            padding:25px;
+            text-align:center;
+            color:#777;
+            font-size:14px;
+            border-top:1px solid #eee;
+        }
+
+        .thank{
+            text-align:center;
+            margin-top:30px;
+            color:#00bcd4;
+            font-size:18px;
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>MarketHub</h1>
+        <p>Order Confirmation</p>
+    </div>
+
+    <div class="content">
+
+        <h2>Hi {{ order.full_name }},</h2>
+
+        <p>
+            Thank you for shopping with <strong>MarketHub</strong>.
+            Your order has been placed successfully.
+        </p>
+
+        <p>
+
+            <strong>Order Number:</strong>
+            #{{ order.id }}
+
+            <br><br>
+
+            <strong>Order Date:</strong>
+            {{ order.created_at|date:"F d, Y h:i A" }}
+
+        </p>
+
+        <div class="section-title">
+            Customer Information
+        </div>
+
+        <table>
+
+            <tr>
+                <td><strong>Full Name</strong></td>
+                <td>{{ order.full_name }}</td>
+            </tr>
+
+            <tr>
+                <td><strong>Email</strong></td>
+                <td>{{ order.email }}</td>
+            </tr>
+
+            <tr>
+                <td><strong>Phone</strong></td>
+                <td>{{ order.phone }}</td>
+            </tr>
+
+            <tr>
+                <td><strong>Address</strong></td>
+                <td>{{ order.address }}</td>
+            </tr>
+
+            <tr>
+                <td><strong>City</strong></td>
+                <td>{{ order.city }}</td>
+            </tr>
+
+            <tr>
+                <td><strong>Zip Code</strong></td>
+                <td>{{ order.zip_code }}</td>
+            </tr>
+
+        </table>
+
+
+        <div class="section-title">
+            Order Items
+        </div>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Product</th>
+                    <th>Color</th>
+                    <th>Size</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for item in items %}
+
+                <tr>
+
+                    <td>{{ item.product.name }}</td>
+
+                    <td>
+                        {% if item.color %}
+                            {{ item.color }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if item.size %}
+                            {{ item.size }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td>{{ item.quantity }}</td>
+
+                    <td>Rs. {{ item.price }}</td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="5" style="text-align:center;">
+                        No items found.
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        <div class="total">
+
+            Total Paid:
+            Rs. {{ order.total_amount }}
+
+        </div>
+
+
+        <div style="margin-top:25px;">
+
+            <strong>Status:</strong>
+
+            <span class="status">
+                {{ order.status }}
+            </span>
+
+        </div>
+
+
+        <div class="thank">
+
+            Thank you for choosing MarketHub ❤
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+
+        © {{ order.created_at|date:"Y" }} MarketHub
+
+        <br><br>
+
+        This is an automated email. Please do not reply.
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
