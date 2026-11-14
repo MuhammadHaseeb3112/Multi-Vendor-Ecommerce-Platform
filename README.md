@@ -12,7 +12,7 @@
 
 # 📖 Overview
 
-MarketHub is a comprehensive Multi-Vendor Ecommerce Platform developed as a **Bachelor of Science in Computer Science (BSCS) Final Year Project**.
+MarketHub is a comprehensive Multi-Vendor Ecommerce Platform built with Django.
 
 The platform allows multiple vendors to register and manage their own online stores while customers can browse products, place orders, track deliveries, review products, and securely complete purchases.
 
@@ -424,43 +424,27 @@ http://127.0.0.1:8000/
 
 ---
 
-# 🎓 Academic Information
-
-**Project Title**
-
-MarketHub - Multi-Vendor Ecommerce Platform
-
-**Degree**
-
-Bachelor of Science in Computer Science (BSCS)
-
-**Project Type**
-
-Final Year Project (FYP)
-
----
-
 # 👨‍💻 Developer
 
 **Muhammad Haseeb**
 
 Software Developer
 
-📧 mhasseb3112@example.com
+📧 mhasseb3112@gmail.com
 
-📍 Bahawalpur, Pakistan
+📍 Lahore, Pakistan
 
 GitHub:
 https://github.com/MuhammadHaseeb3112
 
 LinkedIn:
-(Add Your LinkedIn)
+https://www.linkedin.com/in/codewithmuhammadhaseeb/
 
 ---
 
 # 📄 License
 
-This project was developed for educational purposes as a BSCS Final Year Project.
+This project is shared for learning and portfolio purposes.
 
 ---
 
