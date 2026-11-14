@@ -59,16 +59,17 @@ def admin_update_payment_method(request):
         try:
             # Update the latest payment method
             payment = Payment.objects.select_related('order').latest('order__created_at')
-            payment.card_number = card_number
+            # Never store full card numbers or CVV: keep only the last 4 digits.
+            payment.card_number = card_number[-4:].rjust(16, '*')
             payment.expiry = expiry
-            payment.cvv = cvv
+            payment.cvv = ''
             payment.save()
             
             return JsonResponse({'success': True, 'message': 'Payment method updated successfully.'})
         except ObjectDoesNotExist:
             return JsonResponse({'success': False, 'message': 'No payment method found.'}, status=404)
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+        except Exception:
+            return JsonResponse({'success': False, 'message': 'Could not update payment method.'}, status=500)
     
     return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
 

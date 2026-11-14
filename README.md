@@ -3,9 +3,10 @@
 > A complete Multi-Vendor Ecommerce Platform developed using Django, enabling customers, vendors, and administrators to interact through a secure, scalable, and feature-rich online marketplace.
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
-![Django](https://img.shields.io/badge/Django-5.x-success.svg)
+![Django](https://img.shields.io/badge/Django-6.0-success.svg)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple.svg)
-![SQLite](https://img.shields.io/badge/Database-SQLite-blue.svg)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791.svg)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 ---
@@ -188,7 +189,7 @@ The system automatically sends emails for:
           --------------------------------
                     Django ORM
                          |
-                     SQLite Database
+            PostgreSQL (Docker) / SQLite (local dev)
 ```
 
 ---
@@ -211,7 +212,14 @@ The system automatically sends emails for:
 
 ## Database
 
-- SQLite
+- PostgreSQL 16 (Docker / production)
+- SQLite (zero-config local development)
+
+## DevOps
+
+- Docker & Docker Compose
+- Gunicorn
+- WhiteNoise (static files)
 
 ## Email
 
@@ -260,8 +268,12 @@ MarketHub/
 │   ├── emails/
 │   └── includes/
 │
+├── docker/entrypoint.sh
 ├── media/
 ├── static/
+├── Dockerfile
+├── docker-compose.yml
+├── .env.example
 ├── manage.py
 └── requirements.txt
 ```
@@ -301,7 +313,12 @@ MarketHub/
 - CSRF Protection
 - Email Verification
 - Password Encryption
-- Secure Payment Storage
+- Card data minimisation: only the last 4 digits are stored, CVV is never saved
+- Ownership checks on orders, receipts and vendor order pages
+- Destructive actions (deletes, approvals) accept POST only
+- Order tracking requires Order ID + order email
+- Atomic checkout and race-safe stock updates
+- Secrets loaded from environment variables (`.env`, never committed)
 - Session Based Cart
 
 ---
@@ -336,72 +353,53 @@ Admin Orders
 
 # 🚀 Installation
 
-## Clone Repository
+## Option 1: Docker (PostgreSQL), recommended
 
 ```bash
-git clone https://github.com/yourusername/MarketHub.git
+git clone https://github.com/MuhammadHaseeb3112/Multi-Vendor-Ecommerce-Platform.git
+cd Multi-Vendor-Ecommerce-Platform
 
-cd MarketHub
+cp .env.example .env        # then set SECRET_KEY and POSTGRES_PASSWORD
+docker compose up -d --build
+docker compose exec web python manage.py createsuperuser
+```
+
+Open http://localhost:8000/
+
+The `web` container runs migrations and `collectstatic` on start, then serves the app with Gunicorn. Data lives in the `postgres_data` and `media_data` volumes.
+
+Generate a secret key:
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(50))"
 ```
 
 ---
 
-## Create Virtual Environment
+## Option 2: Local development (SQLite)
 
 ```bash
 python -m venv venv
-```
+venv\Scripts\activate          # Windows
+source venv/bin/activate       # Linux / Mac
 
-Windows
-
-```bash
-venv\Scripts\activate
-```
-
-Linux / Mac
-
-```bash
-source venv/bin/activate
-```
-
----
-
-## Install Dependencies
-
-```bash
 pip install -r requirements.txt
-```
-
----
-
-## Run Migrations
-
-```bash
-python manage.py makemigrations
-
+cp .env.example .env           # set DEBUG=True and leave POSTGRES_DB empty
 python manage.py migrate
-```
-
----
-
-## Create Superuser
-
-```bash
 python manage.py createsuperuser
-```
-
----
-
-## Run Server
-
-```bash
 python manage.py runserver
 ```
 
-Open
+Leave `POSTGRES_DB` empty to use SQLite; set it to use PostgreSQL.
 
-```
-http://127.0.0.1:8000/
+---
+
+## Run Tests
+
+```bash
+python manage.py test api
+# or inside Docker
+docker compose exec web python manage.py test api
 ```
 
 ---
@@ -419,8 +417,7 @@ http://127.0.0.1:8000/
 - Mobile App
 - Real-Time Notifications
 - Multi-language Support
-- Docker Deployment
-- PostgreSQL Deployment
+- CI pipeline (GitHub Actions)
 
 ---
 

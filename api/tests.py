@@ -1,32 +1,158 @@
-from django.test import TestCase
+from decimal import Decimal
+
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase, override_settings
+from django.urls import reverse
 from django.utils import timezone
-from .models import Product, Cart, Coupon
+
+from .models import Cart, Category, Coupon, Order, OrderItem, Payment, Product, Vendor
 
 User = get_user_model()
 
-class CouponTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='pass')
-        self.product = Product.objects.create(name='Test Product', price=100)
-        self.cart = Cart.objects.create(user=self.user)
-        self.cart.items.create(product=self.product, quantity=2)
+# 1x1 transparent GIF, enough for ImageField in tests.
+TINY_GIF = (
+    b"GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff!\xf9\x04"
+    b"\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;"
+)
 
+
+def image(name="img.gif"):
+    return SimpleUploadedFile(name, TINY_GIF, content_type="image/gif")
+
+
+def make_vendor(username):
+    user = User.objects.create_user(username=username, email=f"{username}@example.com", password="pass12345", is_vendor=True)
+    vendor = Vendor.objects.create(
+        user=user, business_name=f"{username} Store", business_type="Retail",
+        registration_number="R1", phone_number="03000000000", address="Street 1",
+        city="Lahore", state="Punjab", zip_code="54000", country="Pakistan",
+        bank_name="Bank", account_holder_name=username, account_number="0001",
+        swift_code="SWFT", business_license="vendor/licenses/x.pdf", id_proof="vendor/id_proof/x.pdf",
+    )
+    return user, vendor
+
+
+@override_settings(MEDIA_ROOT="/tmp/markethub-test-media")
+class BaseTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.category = Category.objects.create(name="Electronics", image=image())
+        cls.vendor_user, cls.vendor = make_vendor("vendor1")
+        cls.other_vendor_user, cls.other_vendor = make_vendor("vendor2")
+        cls.product = Product.objects.create(
+            name="Test Product", category=cls.category, short_details="s", description="d",
+            base_price=Decimal("100.00"), stock=5, image=image(), is_available=True, vendor=cls.vendor,
+        )
+        cls.customer = User.objects.create_user(username="alice", email="alice@example.com", password="pass12345")
+        cls.order = Order.objects.create(
+            user=cls.customer, full_name="Alice", email="alice@example.com", phone="03001234567",
+            address="Street", city="Lahore", zip_code="54000", total_amount=Decimal("200.00"), status="Pending",
+        )
+        OrderItem.objects.create(order=cls.order, product=cls.product, price=Decimal("100.00"), quantity=2)
+
+
+class CouponTestCase(BaseTestCase):
+    def setUp(self):
+        self.cart = Cart.objects.create(user=self.customer)
+        self.cart.items.create(product=self.product, quantity=2)
         self.valid_coupon = Coupon.objects.create(
-            code="DISCOUNT10",
-            discount=10,
-            active=True,
+            code="DISCOUNT10", discount=10, active=True,
             valid_from=timezone.now() - timezone.timedelta(days=1),
-            valid_to=timezone.now() + timezone.timedelta(days=1)
+            valid_to=timezone.now() + timezone.timedelta(days=1),
         )
 
     def test_coupon_application(self):
         self.cart.coupon = self.valid_coupon
-        self.cart.save()
-        self.assertAlmostEqual(self.cart.total_amount(), 180.0)  # 200 - 10% = 180
+        self.cart.update_totals()
+        self.assertAlmostEqual(float(self.cart.total_amount()), 180.0)  # 200 - 10%
 
     def test_coupon_not_yet_valid(self):
         self.valid_coupon.valid_from = timezone.now() + timezone.timedelta(days=1)
         self.valid_coupon.save()
-        now = timezone.now()
-        self.assertTrue(self.valid_coupon.valid_from > now)
+        self.assertTrue(self.valid_coupon.valid_from > timezone.now())
+
+
+class TrackOrderTests(BaseTestCase):
+    url = "/track-order/"
+
+    def test_order_id_alone_does_not_reveal_order(self):
+        resp = self.client.post(self.url, {"query": self.order.id})
+        self.assertIsNone(resp.context["order"])
+
+    def test_email_alone_does_not_reveal_order(self):
+        resp = self.client.post(self.url, {"query": "alice@example.com"})
+        self.assertIsNone(resp.context["order"])
+
+    def test_order_id_with_matching_email(self):
+        resp = self.client.post(self.url, {"query": self.order.id, "email": "ALICE@example.com"})
+        self.assertEqual(resp.context["order"], self.order)
+
+    def test_owner_can_track_without_email(self):
+        self.client.force_login(self.customer)
+        resp = self.client.post(self.url, {"query": self.order.id})
+        self.assertEqual(resp.context["order"], self.order)
+
+
+class AccessControlTests(BaseTestCase):
+    def test_anonymous_cannot_delete_customer(self):
+        resp = self.client.post(reverse("customer_delete", args=[self.customer.pk]))
+        self.assertEqual(resp.status_code, 302)
+        self.assertTrue(User.objects.filter(pk=self.customer.pk).exists())
+
+    def test_customer_cannot_open_admin_withdrawals(self):
+        self.client.force_login(self.customer)
+        resp = self.client.get(reverse("admin_vendor_withdrawals"))
+        self.assertEqual(resp.status_code, 302)
+
+    def test_delete_product_rejects_get(self):
+        self.client.force_login(self.vendor_user)
+        resp = self.client.get(reverse("delete_product", args=[self.product.pk]))
+        self.assertEqual(resp.status_code, 405)
+        self.assertTrue(Product.objects.filter(pk=self.product.pk).exists())
+
+    def test_other_vendor_cannot_see_order(self):
+        self.client.force_login(self.other_vendor_user)
+        resp = self.client.get(reverse("vendor_order_detail", args=[self.order.id]))
+        self.assertEqual(resp.status_code, 404)
+
+    def test_receipt_only_for_owner(self):
+        self.client.force_login(self.other_vendor_user)
+        resp = self.client.get(reverse("generate_receipt", args=[self.order.id]))
+        self.assertEqual(resp.status_code, 404)
+
+
+class VendorStockTests(BaseTestCase):
+    def test_mark_processing_decrements_stock(self):
+        self.client.force_login(self.vendor_user)
+        self.client.post(reverse("vendor_order_detail", args=[self.order.id]), {"action": "mark_processing"})
+        self.product.refresh_from_db()
+        self.order.refresh_from_db()
+        self.assertEqual(self.product.stock, 3)
+        self.assertEqual(self.order.status, "Processing")
+
+    def test_insufficient_stock_keeps_order_pending(self):
+        Product.objects.filter(pk=self.product.pk).update(stock=1)
+        self.client.force_login(self.vendor_user)
+        self.client.post(reverse("vendor_order_detail", args=[self.order.id]), {"action": "mark_processing"})
+        self.product.refresh_from_db()
+        self.order.refresh_from_db()
+        self.assertEqual(self.product.stock, 1)
+        self.assertEqual(self.order.status, "Pending")
+
+
+class PaymentStorageTests(BaseTestCase):
+    def test_update_payment_never_stores_full_card_or_cvv(self):
+        Payment.objects.create(order=self.order, card_number="************1111", expiry="12/30")
+        self.client.force_login(self.customer)
+        self.client.post(reverse("update_payment_method"), {
+            "card_number": "4242 4242 4242 4242", "expiry": "12/30", "cvv": "123",
+        })
+        payment = Payment.objects.get(order=self.order)
+        self.assertEqual(payment.card_number, "************4242")
+        self.assertEqual(payment.cvv, "")
+
+
+class PublicPagesTests(TestCase):
+    def test_home_page_works_on_empty_database(self):
+        self.assertEqual(self.client.get("/").status_code, 200)

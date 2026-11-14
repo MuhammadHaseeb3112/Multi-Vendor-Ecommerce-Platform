@@ -1,3 +1,4 @@
+from django.views.decorators.http import require_POST
 # withdrawviews.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -53,6 +54,7 @@ def edit_vendor_bank_details(request, vendor_id):
     return render(request, 'admin/edit_vendor_bank.html', {'form': form, 'vendor': vendor})
 
 @user_passes_test(is_admin)
+@require_POST
 def delete_vendor_bank_details(request, vendor_id):
     vendor = get_object_or_404(Vendor, id=vendor_id)
     vendor.bank_name = ''

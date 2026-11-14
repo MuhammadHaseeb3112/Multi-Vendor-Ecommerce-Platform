@@ -5,11 +5,11 @@
     <!-- Category Image and Info -->
     <div class="col-lg-4 mb-4">
       <div class="card shadow-sm border-0 h-100">
-        <img src="{{ deals_category.image.url }}" alt="{{women_category.name }}" class="card-img-top" style="height: 300px; object-fit: cover;">
+        <img src="{{ women_category.image.url }}" alt="{{ women_category.name }}" class="card-img-top" style="height: 300px; object-fit: cover;">
         <div class="card-body text-center">
           <h4 class="card-title">{{ women_category.name }}</h4>
           <p class="text-muted">{{ women_category.description|truncatewords:20 }}</p>
-          <a href="{% url 'category_products' women_category.slug %}" class="btn btn-danger mt-2">View All Products</a>
+          {% if women_category %}<a href="{% url 'category_products' women_category.slug %}" class="btn btn-danger mt-2">View All Products</a>{% endif %}
         </div>
       </div>
     </div>

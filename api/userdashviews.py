@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from .tracking import find_trackable_order
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import *
@@ -21,10 +23,12 @@ def customer_dashboard(request):
 from django.shortcuts import render, get_object_or_404
 from .models import Order
 
+@login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, 'customers/order_detail.html', {'order': order})
 login_required
+@login_required
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'customers/my_orders.html', {'orders': orders})
@@ -71,13 +75,8 @@ def track_order_view(request):
     searched = False
 
     if request.method == 'POST':
-        query = request.POST.get('query')
         searched = True
-
-        if query.isdigit():
-            order = Order.objects.filter(id=query).first()
-        else:
-            order = Order.objects.filter(email__iexact=query).last()
+        order = find_trackable_order(request)
 
     return render(request, 'customers/track_order.html', {'order': order, 'searched': searched})
 from django.core.paginator import Paginator

@@ -1,3 +1,7 @@
+from django.views.decorators.http import require_POST
+from django.db import transaction
+from django.db.models import F
+from django.http import Http404
 # vendors/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -92,6 +96,7 @@ def edit_product(request, pk):
     return render(request, 'vendor/add_edit_product.html', {'form': form, 'title': 'Edit Product'})
 
 @login_required
+@require_POST
 def delete_product(request, pk):
     product = get_object_or_404(Product, pk=pk, vendor__user=request.user)
     product.delete()
@@ -162,6 +167,7 @@ def edit_color_variant(request, product_id, variant_id):
         'product': product
     })
 @login_required
+@require_POST
 def delete_color_variant(request, product_id, variant_id):
     product = get_object_or_404(Product, id=product_id, vendor__user=request.user)
     variant = get_object_or_404(ProductColorVariant, id=variant_id, product=product)
@@ -186,6 +192,7 @@ def edit_size_variant(request, product_id, variant_id):
         'product': product
     })
 @login_required
+@require_POST
 def delete_size_variant(request, product_id, variant_id):
     product = get_object_or_404(Product, id=product_id, vendor__user=request.user)
     variant = get_object_or_404(ProductSizeVariant, id=variant_id, product=product)
@@ -220,30 +227,30 @@ def vendor_order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     vendor = get_object_or_404(Vendor, user=request.user)
 
-    # Only show items for this vendor
-    order_items = OrderItem.objects.filter(order=order, product__vendor=vendor)
+    # Only show items for this vendor; other vendors' orders are not visible.
+    order_items = OrderItem.objects.filter(order=order, product__vendor=vendor).select_related('product')
+    if not order_items.exists():
+        raise Http404("Order not found")
 
     if request.method == 'POST':
         action = request.POST.get('action')
 
         if action == 'mark_processing' and order.status == 'Pending':
             # Check stock before updating
-            stock_issue = False
-            for item in order_items:
-                if item.product.stock < item.quantity:
-                    stock_issue = True
-                    messages.error(request, f"Insufficient stock for product '{item.product.name}'.")
-                    break
-
-            if not stock_issue:
-                for item in order_items:
-                    product = item.product
-                    product.stock -= item.quantity
-                    product.save()
-
-                order.status = 'Processing'
-                order.save()
+            # Lock the rows and decrement atomically so two requests can't oversell.
+            try:
+                with transaction.atomic():
+                    for item in order_items:
+                        updated = Product.objects.filter(
+                            pk=item.product_id, stock__gte=item.quantity
+                        ).update(stock=F('stock') - item.quantity)
+                        if not updated:
+                            raise ValueError(item.product.name)
+                    order.status = 'Processing'
+                    order.save(update_fields=['status'])
                 messages.success(request, "Order marked as Processing and stock updated.")
+            except ValueError as exc:
+                messages.error(request, f"Insufficient stock for product '{exc}'.")
 
         elif action == 'mark_shipped' and order.status == 'Processing':
             order.status = 'Shipped'

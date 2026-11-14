@@ -377,7 +377,7 @@ class Payment(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
     card_number = models.CharField(max_length=20)  # Mask in production
     expiry = models.CharField(max_length=5)
-    cvv = models.CharField(max_length=4)
+    cvv = models.CharField(max_length=4, blank=True, default="")  # never stored (PCI-DSS)
     payment_status = models.CharField(max_length=20, default='Success')
 
     def __str__(self):

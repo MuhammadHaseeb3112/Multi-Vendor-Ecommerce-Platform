@@ -5,9 +5,14 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from .models import *
+from django.db import transaction
+
+import logging
 
 import datetime
 import re
+
+logger = logging.getLogger(__name__)
 
 
 @login_required(login_url="login")
@@ -39,9 +44,8 @@ def checkout_view(request):
             "address": address,
             "city": city,
             "zip_code": zip_code,
-            "card_number": card_number,
+            # Card number and CVV are never echoed back to the page.
             "expiry": expiry,
-            "cvv": cvv,
         }
 
         errors = {}
@@ -146,49 +150,50 @@ def checkout_view(request):
         # Create Order
         # ---------------------------
 
-        order = Order.objects.create(
-            user=user,
-            full_name=full_name,
-            email=email,
-            phone=phone,
-            address=address,
-            city=city,
-            zip_code=zip_code,
-            total_amount=cart.total_amount(),
-            status="Pending",
-        )
-
-        # ---------------------------
-        # Create Order Items
-        # ---------------------------
-
-        for item in cart.items.all():
-
-            OrderItem.objects.create(
-                order=order,
-                product=item.product,
-                color=item.color.color_name
-                if item.color else "",
-                size=item.size.size_label
-                if item.size else "",
-                price=item.total_price / item.quantity,
-                quantity=item.quantity,
+        with transaction.atomic():
+            order = Order.objects.create(
+                user=user,
+                full_name=full_name,
+                email=email,
+                phone=phone,
+                address=address,
+                city=city,
+                zip_code=zip_code,
+                total_amount=cart.total_amount(),
+                status="Pending",
             )
 
-        # ---------------------------
-        # Payment Record
-        # ---------------------------
+            # ---------------------------
+            # Create Order Items
+            # ---------------------------
 
-        Payment.objects.create(
-            order=order,
-            card_number=card_number[-4:].rjust(
-                16,
-                "*"
-            ),
-            expiry=expiry,
-            cvv="***",
-            payment_status="Success",
-        )
+            for item in cart.items.all():
+
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    color=item.color.color_name
+                    if item.color else "",
+                    size=item.size.size_label
+                    if item.size else "",
+                    price=item.total_price / item.quantity,
+                    quantity=item.quantity,
+                )
+
+            # ---------------------------
+            # Payment Record
+            # ---------------------------
+
+            Payment.objects.create(
+                order=order,
+                card_number=card_number[-4:].rjust(
+                    16,
+                    "*"
+                ),
+                expiry=expiry,
+                cvv="",
+                payment_status="Success",
+            )
 
         # ---------------------------
         # Confirmation Email
@@ -211,7 +216,11 @@ def checkout_view(request):
 
         email_message.attach_alternative(html_content, "text/html")
 
-        email_message.send(fail_silently=False)
+        try:
+            email_message.send(fail_silently=False)
+        except Exception:
+            # Order is already saved; a mail outage must not break checkout.
+            logger.exception("Order confirmation email failed for order %s", order.id)
 
     
         # ---------------------------

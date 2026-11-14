@@ -1,3 +1,6 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.decorators.http import require_POST
+from .tracking import find_trackable_order
 from django.shortcuts import render, get_object_or_404
 from .models import Product, Category
 from django.http import JsonResponse, Http404
@@ -11,16 +14,18 @@ def home(request):
     top_vendors = Vendor.objects.annotate(
         product_count=models.Count('products')
     ).order_by('-product_count')[:4]
-    featured_category = get_object_or_404(Category, slug='electronics') 
-    electronics_category = Category.objects.get(slug="electronics")  
-    electronics_products = Product.objects.filter(category=electronics_category, is_available=True)[:3]
-    deals_category = Category.objects.get(slug="deals")  
-    deals_products = Product.objects.filter(category=deals_category, is_available=True)[:3]
-    mens_category = Category.objects.get(slug="mens-fashion")  
-    mens_products = Product.objects.filter(category=mens_category, is_available=True)[:3]
-    women_category = Category.objects.get(slug="women-fashion")  
-    women_products = Product.objects.filter(category=women_category, is_available=True)[:3]
-    products = Product.objects.filter(category=featured_category, is_available=True)
+    # Works on a fresh database too: missing categories just give empty sections.
+    available = Product.objects.filter(is_available=True).select_related('category', 'vendor')
+    featured_category = Category.objects.filter(slug='electronics').first()
+    electronics_category = featured_category
+    electronics_products = available.filter(category__slug="electronics")[:3]
+    deals_category = Category.objects.filter(slug="deals").first()
+    deals_products = available.filter(category__slug="deals")[:3]
+    mens_category = Category.objects.filter(slug="mens-fashion").first()
+    mens_products = available.filter(category__slug="mens-fashion")[:3]
+    women_category = Category.objects.filter(slug="women-fashion").first()
+    women_products = available.filter(category__slug="women-fashion")[:3]
+    products = available.filter(category__slug="electronics")
     
     selected_category_id = request.GET.get('category')
     categories = Category.objects.all()
@@ -196,27 +201,18 @@ def track_order_view(request):
     searched = False
 
     if request.method == 'POST':
-        query = request.POST.get('query')
         searched = True
-
-        if query.isdigit():
-            order = Order.objects.filter(id=query).first()
-        else:
-            order = Order.objects.filter(email__iexact=query).last()
+        order = find_trackable_order(request)
 
     return render(request, 'track_order.html', {'order': order, 'searched': searched})
+@login_required
 def vendor_track_order_view(request):
     order = None
     searched = False
 
     if request.method == 'POST':
-        query = request.POST.get('query')
         searched = True
-
-        if query.isdigit():
-            order = Order.objects.filter(id=query).first()
-        else:
-            order = Order.objects.filter(email__iexact=query).last()
+        order = find_trackable_order(request)
 
     return render(request, 'vendor/track_order.html', {'order': order, 'searched': searched})
 from django.shortcuts import render, get_object_or_404, redirect
@@ -226,6 +222,8 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def customer_list(request):
     query = request.GET.get('q')
     customers = CustomUser.objects.filter(is_customer=True)
@@ -236,6 +234,8 @@ def customer_list(request):
     customers = paginator.get_page(page)
     return render(request, 'admin/customers_list.html', {'customers': customers})
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def customer_create(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST, request.FILES)
@@ -247,6 +247,8 @@ def customer_create(request):
         form = CustomerForm()
     return render(request, 'admin/customers_form.html', {'form': form, 'title': 'Add Customer'})
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def customer_edit(request, pk):
     customer = get_object_or_404(CustomUser, pk=pk)
     form = CustomerForm(request.POST or None, request.FILES or None, instance=customer)
@@ -256,6 +258,9 @@ def customer_edit(request, pk):
         return redirect('customer_list')
     return render(request, 'admin/customers_form.html', {'form': form, 'title': 'Edit Customer'})
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+@require_POST
 def customer_delete(request, pk):
     customer = get_object_or_404(CustomUser, pk=pk)
     customer.delete()
@@ -267,7 +272,6 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import Cart, CartItem, Product  # Adjust import as needed
 
-@csrf_exempt
 def update_cart_ajax(request):
     if request.method == 'POST' and request.user.is_authenticated:
         data = json.loads(request.body)

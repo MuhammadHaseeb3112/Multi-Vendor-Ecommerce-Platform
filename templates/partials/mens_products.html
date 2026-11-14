@@ -9,7 +9,7 @@
         <div class="card-body text-center">
           <h4 class="card-title">{{ mens_category.name }}</h4>
           <p class="text-muted">{{ mens_category.description|truncatewords:20 }}</p>
-          <a href="{% url 'category_products' mens_category.slug %}" class="btn btn-danger mt-2">View All Products</a>
+          {% if mens_category %}<a href="{% url 'category_products' mens_category.slug %}" class="btn btn-danger mt-2">View All Products</a>{% endif %}
         </div>
       </div>
     </div>

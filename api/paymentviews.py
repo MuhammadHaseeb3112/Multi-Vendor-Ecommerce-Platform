@@ -36,14 +36,18 @@ def update_payment_method(request):
             return JsonResponse({'success': False, 'message': 'Invalid expiry date format. Use MM/YY.'})
 
         # Update card details
-        payment.card_number = card_number
+        digits = card_number.replace(' ', '')
+        if not digits.isdigit() or not 12 <= len(digits) <= 19:
+            return JsonResponse({'success': False, 'message': 'Invalid card number.'})
+        # Never store full card numbers or CVV (PCI-DSS): keep only the last 4 digits.
+        payment.card_number = digits[-4:].rjust(16, '*')
         payment.expiry = expiry
-        payment.cvv = cvv  # You may choose to encrypt this in real systems
+        payment.cvv = ''
         payment.save()
 
         return JsonResponse({'success': True})
-    except Exception as e:
-        return JsonResponse({'success': False, 'message': str(e)})
+    except Payment.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'No payment method found.'})
 
 
 @require_POST

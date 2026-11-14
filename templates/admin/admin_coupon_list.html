@@ -154,7 +154,7 @@
                 </td>
                 <td>
                   <a href="{% url 'admin-coupon-edit' coupon.id %}" class="btn btn-sm btn-primary">Edit</a>
-                  <a href="{% url 'admin-coupon-delete' coupon.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this coupon?');">Delete</a>
+                  <form method="post" action="{% url 'admin-coupon-delete' coupon.id %}" class="d-inline" onsubmit="return confirm('Delete this coupon?');">{% csrf_token %}<button type="submit" class="btn btn-sm btn-danger">Delete</button></form>
                 </td>
               </tr>
               {% empty %}

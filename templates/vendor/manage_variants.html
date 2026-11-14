@@ -102,8 +102,7 @@
               <div class="btn-group">
                 <a href="{% url 'edit_color_variant' product.id variant.id %}"
                   class="btn btn-sm btn-outline-warning">Edit</a>
-                <a href="{% url 'delete_color_variant' product.id variant.id %}" class="btn btn-sm btn-outline-danger"
-                  onclick="return confirm('Are you sure you want to delete this color variant?')">Delete</a>
+                <form method="post" action="{% url 'delete_color_variant' product.id variant.id %}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this color variant?')">{% csrf_token %}<button type="submit" class="btn btn-sm btn-outline-danger">Delete</button></form>
               </div>
             </li>
             {% empty %}
@@ -127,8 +126,7 @@
               <div class="btn-group">
                 <a href="{% url 'edit_size_variant' product.id variant.id %}"
                   class="btn btn-sm btn-outline-warning">Edit</a>
-                <a href="{% url 'delete_size_variant' product.id variant.id %}" class="btn btn-sm btn-outline-danger"
-                  onclick="return confirm('Are you sure you want to delete this size variant?')">Delete</a>
+                <form method="post" action="{% url 'delete_size_variant' product.id variant.id %}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this size variant?')">{% csrf_token %}<button type="submit" class="btn btn-sm btn-outline-danger">Delete</button></form>
               </div>
             </li>
             {% empty %}

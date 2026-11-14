@@ -1,3 +1,6 @@
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import Order
@@ -10,11 +13,16 @@ import base64
 def receipt_input_view(request):
     return render(request, 'receipt_input.html')
 
+@login_required
 def generate_receipt(request, order_id):
     order = get_object_or_404(Order, id=order_id)
+    user = request.user
+    is_vendor_of_order = hasattr(user, "vendor") and order.items.filter(product__vendor=user.vendor).exists()
+    if not (user.is_staff or order.user_id == user.id or is_vendor_of_order):
+        raise Http404("Order not found")
 
     # QR Code generation
-    qr = qrcode.make(f'http://127.0.0.1:8000/track-order/{order.id}')
+    qr = qrcode.make(request.build_absolute_uri(reverse('track_order')))
     qr_io = BytesIO()
     qr.save(qr_io, format='PNG')
     qr_base64 = base64.b64encode(qr_io.getvalue()).decode()

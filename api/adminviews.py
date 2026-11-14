@@ -1,3 +1,4 @@
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib.admin.views.decorators import staff_member_required
@@ -107,6 +108,7 @@ import csv
 
 
 
+@user_passes_test(is_admin)
 def admin_manage_orders(request):
     query = request.GET.get('q')
     status_filter = request.GET.get('status')
@@ -209,12 +211,14 @@ def admin_order_detail(request, order_id):
         'order': order,
         'order_items': order_items,
     })
+@user_passes_test(is_admin)
 def admin_vendor_withdrawals(request):
     withdrawals = Withdrawal.objects.select_related('vendor__user').all()
     return render(request, 'admin/admin_vendor_withdrawals.html', {'withdrawals': withdrawals})
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Withdrawal
 
+@user_passes_test(is_admin)
 def edit_withdrawal_view(request, pk):
     withdrawal = get_object_or_404(Withdrawal, pk=pk)
     
@@ -230,6 +234,8 @@ def edit_withdrawal_view(request, pk):
 
     return render(request, 'admin/admin_edit_withdrawal.html', {'withdrawal': withdrawal})
 
+@user_passes_test(is_admin)
+@require_POST
 def delete_withdrawal_view(request, pk):
     withdrawal = get_object_or_404(Withdrawal, pk=pk)
     
@@ -243,6 +249,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.timezone import now
 
+@user_passes_test(is_admin)
+@require_POST
 def approve_withdrawal_view(request, pk):
     withdrawal = get_object_or_404(Withdrawal, pk=pk)
     if withdrawal.status == 'Pending':
@@ -275,6 +283,8 @@ def approve_withdrawal_view(request, pk):
         messages.warning(request, 'Withdrawal request is already processed.')
     return redirect('admin_vendor_withdrawals')
 
+@user_passes_test(is_admin)
+@require_POST
 def reject_withdrawal_view(request, pk):
     withdrawal = get_object_or_404(Withdrawal, pk=pk)
     if withdrawal.status == 'Pending':
@@ -307,6 +317,7 @@ def reject_withdrawal_view(request, pk):
         messages.warning(request, 'Withdrawal request is already processed.')
     return redirect('admin_vendor_withdrawals')
 
+@user_passes_test(is_admin)
 def export_withdrawals_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="withdrawals.csv"'
@@ -318,6 +329,7 @@ def export_withdrawals_csv(request):
 
     return response
 
+@user_passes_test(is_admin)
 def export_withdrawals_pdf(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="withdrawals.pdf"'
@@ -358,6 +370,7 @@ def admin_edit_vendor_payment(request, vendor_id):
 
 
 @user_passes_test(is_admin)
+@require_POST
 def admin_delete_vendor_payment(request, vendor_id):
     vendor = get_object_or_404(Vendor, id=vendor_id)
     vendor.delete()
@@ -447,6 +460,7 @@ def admin_coupon_edit(request, coupon_id):
     
 
 @user_passes_test(is_admin)
+@require_POST
 def admin_coupon_delete(request, coupon_id):
     coupon = get_object_or_404(Coupon, id=coupon_id)
     coupon.delete()

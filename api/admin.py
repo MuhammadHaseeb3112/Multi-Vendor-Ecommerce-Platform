@@ -18,7 +18,7 @@ class OrderItemAdmin(admin.ModelAdmin):
     list_filter = ('order', 'product', 'color', 'size')
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('order', 'payment_status', 'card_number', 'expiry', 'cvv')
+    list_display = ('order', 'payment_status', 'card_number', 'expiry')
     list_filter = ('payment_status', 'order')
 @admin.register(ProductQuestion)
 class ProductQuestionAdmin(admin.ModelAdmin):

@@ -124,8 +124,10 @@
           <form method="post" class="mb-4">
             {% csrf_token %}
             <div class="mb-3">
-              <label for="query" class="form-label fw-semibold">Order ID or Email</label>
-              <input type="text" name="query" class="form-control shadow-sm" placeholder="Enter Order ID or Email" required>
+              <label for="query" class="form-label fw-semibold">Order ID</label>
+              <input type="text" name="query" inputmode="numeric" class="form-control shadow-sm" placeholder="e.g. 1024" required>
+              <label for="email" class="form-label fw-semibold mt-3">Email used for the order</label>
+              <input type="email" name="email" class="form-control shadow-sm" placeholder="you@example.com">
             </div>
             <button type="submit" class="btn btn-primary w-100" style="background-color:#BB2D3B">Track Order</button>
           </form>
