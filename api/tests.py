@@ -227,3 +227,60 @@ class RoutingTests(BaseTestCase):
         for name in ["home", "shop", "about_us", "contact", "track_order", "login", "register_customer", "register_vendor"]:
             with self.subTest(page=name):
                 self.assertEqual(self.client.get(reverse(name)).status_code, 200)
+
+
+@override_settings(DEMO_MODE=True, MEDIA_ROOT="/tmp/markethub-test-media")
+class DemoModeTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        from django.core.management import call_command
+        call_command("seed_demo", verbosity=0)
+
+    def test_seed_creates_demo_accounts_and_data(self):
+        self.assertEqual(Product.objects.count(), 26)
+        self.assertEqual(Order.objects.count(), 30)
+        self.assertTrue(User.objects.get(username="demo_admin").is_superuser)
+        self.assertTrue(hasattr(User.objects.get(username="demo_vendor"), "vendor"))
+        # no real addresses: every account uses example.com
+        self.assertFalse(User.objects.exclude(email__endswith="@example.com").exists())
+
+    def test_seed_is_idempotent(self):
+        from django.core.management import call_command
+        call_command("seed_demo", verbosity=0)
+        self.assertEqual(Order.objects.count(), 30)
+
+    def test_demo_logins_work_and_dashboards_render(self):
+        for username, page in [("demo_customer", "customer_dashboard"),
+                               ("demo_vendor", "vendor_dashboard"),
+                               ("demo_admin", "admin_dashboard")]:
+            with self.subTest(user=username):
+                self.assertTrue(self.client.login(username=username, password="DemoPass123!"))
+                self.assertEqual(self.client.get(reverse(page)).status_code, 200)
+                self.client.logout()
+
+    def test_login_page_shows_demo_accounts(self):
+        self.assertContains(self.client.get(reverse("login")), "demo_vendor")
+
+    def test_password_change_is_blocked(self):
+        self.client.login(username="demo_customer", password="DemoPass123!")
+        self.client.post(reverse("change_password"), {
+            "old_password": "DemoPass123!", "new_password1": "Hacked12345!", "new_password2": "Hacked12345!",
+        })
+        self.assertTrue(User.objects.get(username="demo_customer").check_password("DemoPass123!"))
+
+    def test_admin_cannot_delete_users_in_demo(self):
+        self.client.login(username="demo_admin", password="DemoPass123!")
+        target = User.objects.get(username="demo_customer")
+        self.client.post(reverse("customer_delete", args=[target.pk]))
+        self.assertTrue(User.objects.filter(pk=target.pk).exists())
+
+
+class DemoModeOffTests(TestCase):
+    def test_seed_refuses_outside_demo_mode(self):
+        from django.core.management import call_command
+        from django.core.management.base import CommandError
+        with self.assertRaises(CommandError):
+            call_command("seed_demo", verbosity=0)
+
+    def test_login_page_has_no_demo_box(self):
+        self.assertNotContains(self.client.get(reverse("login")), "demo_vendor")

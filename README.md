@@ -7,7 +7,7 @@
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple.svg)
 ![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791.svg)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)
-![Tests](https://img.shields.io/badge/Tests-25%20passing-brightgreen.svg)
+![Tests](https://img.shields.io/badge/Tests-33%20passing-brightgreen.svg)
 
 ---
 
@@ -272,6 +272,7 @@ MarketHub/
 │   ├── emails/
 │   └── includes/
 │
+├── deploy/                 (production compose + guide)
 ├── docker/entrypoint.sh
 ├── docs/screenshots/
 ├── media/
@@ -397,9 +398,27 @@ Leave `POSTGRES_DB` empty to use SQLite; set it to use PostgreSQL.
 
 ---
 
+## Demo data
+
+Want something to click through straight away? Load the demo data set
+(demo logins, 5 stores, 26 products, 30 sample orders, no real customer data):
+
+```bash
+python manage.py seed_demo --force            # local
+docker compose exec web python manage.py seed_demo --force   # Docker
+```
+
+Logins: `demo_customer`, `demo_vendor`, `demo_admin`, password `DemoPass123!`.
+
+Setting `DEMO_MODE=True` turns the app into a safe public demo: demo logins on
+the login page, no outgoing email, and password/user management locked.
+Deployment behind a reverse proxy is described in [deploy/DEPLOY.md](deploy/DEPLOY.md).
+
+---
+
 ## Run Tests
 
-25 automated tests cover access control, order tracking, payment data handling, cart and coupon flows, stock updates and login rate limiting.
+33 automated tests cover access control, order tracking, payment data handling, cart and coupon flows, stock updates, login rate limiting and demo mode.
 
 ```bash
 python manage.py test api

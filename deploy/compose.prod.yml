@@ -1,0 +1,66 @@
+# Production / public demo stack for a server that already runs a Caddy
+# reverse proxy on ports 80/443 (shared Docker network "edge").
+#
+#   docker network create edge                      # once per server
+#   cp deploy/env.prod.example deploy/.env.prod     # then fill it in
+#   docker compose -p markethub -f deploy/compose.prod.yml \
+#     --env-file deploy/.env.prod up -d --build
+#
+# Nothing is published on the host: the proxy reaches the app over "edge" as
+# markethub-web:8000. The database stays on this stack's private network.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-markethub}
+      POSTGRES_USER: ${POSTGRES_USER:-markethub}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in deploy/.env.prod}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    mem_limit: 256m
+
+  web:
+    build:
+      context: ..
+    restart: unless-stopped
+    env_file: .env.prod
+    environment:
+      POSTGRES_HOST: db
+      DEBUG: "False"
+      TRUSTED_PROXY: "True"
+      SERVE_MEDIA: "True"
+    command: ["gunicorn", "MarketHub.wsgi:application", "--bind", "0.0.0.0:8000",
+              "--workers", "2", "--timeout", "60", "--access-logfile", "-"]
+    volumes:
+      - media_data:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/login/', timeout=5).status == 200 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    mem_limit: 512m
+    networks:
+      default: {}
+      edge:
+        aliases:
+          - markethub-web
+
+networks:
+  edge:
+    external: true
+
+volumes:
+  postgres_data:
+  media_data:

@@ -7,9 +7,13 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include('api.urls')),
 ]
+
+# The public demo exposes a shared admin login, so Django's own admin site
+# (which could edit users and passwords) is switched off there.
+if not settings.DEMO_MODE:
+    urlpatterns.insert(0, path('admin/', admin.site.urls))
 
 # Uploaded media: served by Django in development, or when SERVE_MEDIA=True
 # (small single-container deployments without a separate web server).

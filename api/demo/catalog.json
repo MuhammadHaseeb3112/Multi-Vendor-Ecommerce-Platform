@@ -1,0 +1,558 @@
+{
+ "categories": [
+  {
+   "name": "Electronics",
+   "slug": "electronics",
+   "image": "category_images/Cate_2_PeL3DVX.jpg"
+  },
+  {
+   "name": "Deals",
+   "slug": "deals",
+   "image": "category_images/Cate_1_wsOoKRa.jpg"
+  },
+  {
+   "name": "Fashion",
+   "slug": "fashion",
+   "image": "category_images/Cate_4.jpg"
+  },
+  {
+   "name": "Furniture",
+   "slug": "furniture",
+   "image": "category_images/Cate_3.jpg"
+  },
+  {
+   "name": "Health & Beauty",
+   "slug": "health-beauty",
+   "image": "category_images/Cate_5_RP51pAe.jpg"
+  },
+  {
+   "name": "Jewelry",
+   "slug": "jewelry",
+   "image": "category_images/Cate_6_ZgYIJxC.jpg"
+  },
+  {
+   "name": "Mom & Baby",
+   "slug": "mom-baby",
+   "image": "category_images/Cate_7_dzuo6Zu.jpg"
+  },
+  {
+   "name": "Pets Shop",
+   "slug": "pets-shop",
+   "image": "category_images/Cate_9_WRU7Flk.jpg"
+  },
+  {
+   "name": "Toys and Games",
+   "slug": "toys-and-games",
+   "image": "category_images/Cate_8_ogGW9S9.jpg"
+  },
+  {
+   "name": "Men's Fashion",
+   "slug": "mens-fashion",
+   "image": "category_images/ks13.png"
+  },
+  {
+   "name": "Man Fragrances",
+   "slug": "man-fragrances",
+   "image": "category_images/jj-theme-9.webp"
+  },
+  {
+   "name": "Women's Fashion",
+   "slug": "women-fashion",
+   "image": "category_images/0U3PELX25V37_2.jpg"
+  }
+ ],
+ "vendors": [
+  {
+   "key": "chm",
+   "username": "demo_vendor",
+   "business_name": "CHM Store",
+   "slug": "chm-store",
+   "logo": "vendor/logos/Logo_Shop_5.jpg",
+   "city": "Lahore",
+   "desc": "Electronics, gadgets and home appliances at fair prices."
+  },
+  {
+   "key": "campus",
+   "username": "campus_store",
+   "business_name": "Campus Store",
+   "slug": "campus-store",
+   "logo": "",
+   "city": "Bahawalpur",
+   "desc": "Everyday tech and accessories for students."
+  },
+  {
+   "key": "jamal",
+   "username": "jamal_apparel",
+   "business_name": "Jamal Apparel",
+   "slug": "jamal-apparel",
+   "logo": "",
+   "city": "Karachi",
+   "desc": "Men's eastern wear, fragrances and accessories."
+  },
+  {
+   "key": "pricewise",
+   "username": "pricewise",
+   "business_name": "PriceWise",
+   "slug": "pricewise",
+   "logo": "",
+   "city": "Lahore",
+   "desc": "Phones, audio and smart devices with warranty."
+  },
+  {
+   "key": "silk",
+   "username": "silk_and_stone",
+   "business_name": "Silk & Stone",
+   "slug": "silk-and-stone",
+   "logo": "",
+   "city": "Faisalabad",
+   "desc": "Women's fashion, bags and jewellery."
+  }
+ ],
+ "products": [
+  {
+   "name": "Samsung Galaxy S24 Ultra",
+   "slug": "Samsung_Galaxy-S24-Ultra",
+   "category": "electronics",
+   "vendor": "chm",
+   "short_details": "Samsung Galaxy S24 Ultra price in Pakistan\r\nSamsung Galaxy S24 Ultra price in Pakistan is Rs. 434,999. Official dealers and warranty providers regulate the retail price of Samsung mobile products in official warranty.\r\n\r\nPrice of Samsung Galaxy S24 Ultra in Pakistan is Rs. 434,999.\r\nPrice of Samsung in USD is $1330.",
+   "description": "Samsung Galaxy S24 Ultra price in Pakistan\r\nSamsung Galaxy S24 Ultra price in Pakistan is Rs. 434,999. Official dealers and warranty providers regulate the retail price of Samsung mobile products in official warranty.\r\n\r\nPrice of Samsung Galaxy S24 Ultra in Pakistan is Rs. 434,999.\r\nPrice of Samsung in USD is $1330.\r\nSamsung Galaxy S24 Ultra - Samsung's Most Awaited Smartphone!\r\nSamsung is secretly working on the Galaxy S24 series with the high-end Ultra variant. Rumors suggest that the Galaxy S24 series will be powered by the latest Qualcomm Snapdragon processor and will feature an improved display with a faster refresh rate. It will also have a larger battery capacity and faster charging speeds than its predecessor. According to some famous leakers, Samsung is in the process of preparing its Galaxy S24 Ultra, which is expected to be launched in 2024. In the same way as its predecessor, the S23 Ultra, it is expected to be a handset with the most advanced and cutting-edge features. To find out more about the Samsung Galaxy S24, let's take a closer look at what this device is capable of. There is no doubt that this S24 Ultra has a massive 6.8-inch dynamic AMOLED 2X capacitive touchscreen display that will catch your attention right away. With a mind-blowing resolution of 1440 x 3120 pixels, this S24 Ultra will give you the most incredible viewing experience. Besides the gigantic screen, some of the features that have been added to this display are the Corning Gorilla Glass Armor, 120 Hz, HDR10+, 1750 nits (peak) brightness, and the Always On Display. It is worth mentioning that the Samsung Galaxy's S24 Ultra is powered by Qualcomm's most powerful and durable Snapdragon 8 Gen 3 (4 nm) chipset, which is clocked at 3.39 GHz on an Octa-Core CPU. In the new Galaxy S24 Ultra, there will be Quad camera sensors. The main one will be a 200 MP sensor, and the other two will be 50 MP (periscope telephoto) and 10 MP (telephoto) lenses and 12 MP ultra-wide lense. It has also been confirmed that Samsung's Galaxy S24 Ultra, which is set to come out later this year, will have 256GB of internal memory and a massive 12 GB of RAM. Thanks to its 5000mAh battery pack, this beast can easily last the entire day with just one charge, making it the perfect everyday companion. So finally, the future Galaxy S24 Ultra by Samsung is preparing to compete with its competitors shortly. Let the smartphone wars begin.",
+   "brand": "Samsung",
+   "base_price": "434999.00",
+   "stock": 500,
+   "image": "products/SamsungGalaxyS24Ultra-b.jpg",
+   "is_available": true,
+   "tags": "Samsung Galaxy s24 Ultra",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Living Room Upholstered Modern Hot 3",
+   "slug": "living-room-upholstered-modern-hot-3",
+   "category": "deals",
+   "vendor": "chm",
+   "short_details": "Never run out of ink. Connect your printer to Alexa and receive notifications when you’re running low. Alexa can even place a smart reorder from Amazon on your behalf, if you enroll in smart reorders\r\nEnrolling in Smart Reorders with Alexa ensures that you never have too much or too little ink supplies. No subscription needed.\r\nWireless 4-in-1 (Print | Copy | Scan | Fax)\r\n15 / 10 ipm Print Speed",
+   "description": "About this item\r\nNever run out of ink. Connect your printer to Alexa and receive notifications when you’re running low. Alexa can even place a smart reorder from Amazon on your behalf, if you enroll in smart reorders\r\nEnrolling in Smart Reorders with Alexa ensures that you never have too much or too little ink supplies. No subscription needed.\r\nWireless 4-in-1 (Print | Copy | Scan | Fax)\r\n15 / 10 ipm Print Speed\r\n200 Sheet Capacity (100 Cassette, 100 Rear Feed)\r\nAuto 2-Sided Printing\r\n1,000 Page Duty Cycle\r\nMicro SD Slot,ENERGY STAR, EPEAT Silver\r\n1 Year Warranty\r\nPrint with your voice. Just say “Alexa, discover my printer”\r\nWhat’s in the box\r\nPIXMA TR8620, Documentation, Set of Standard Ink Tanks, RJ-11 Telephone/Modem Cords, Power Cord",
+   "brand": "Bronze CS",
+   "base_price": "15000.00",
+   "stock": 16,
+   "image": "products/19_1.jpg",
+   "is_available": true,
+   "tags": "Living Room Upholstered Modern Hot 3",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "HomePop Uphols Table Modern Hot 2",
+   "slug": "homepop-uphols-table-modern-hot-2",
+   "category": "deals",
+   "vendor": "chm",
+   "short_details": "Never run out of ink. Connect your printer to Alexa and receive notifications when you’re running low. Alexa can even place a smart reorder from Amazon on your behalf, if you enroll in smart reorders\r\nEnrolling in Smart Reorders with Alexa ensures that you never have too much or too little ink supplies. No subscription needed.\r\nWireless 4-in-1 (Print | Copy | Scan | Fax)\r\n15 / 10 ipm Print Speed",
+   "description": "About this item\r\nNever run out of ink. Connect your printer to Alexa and receive notifications when you’re running low. Alexa can even place a smart reorder from Amazon on your behalf, if you enroll in smart reorders\r\nEnrolling in Smart Reorders with Alexa ensures that you never have too much or too little ink supplies. No subscription needed.\r\nWireless 4-in-1 (Print | Copy | Scan | Fax)\r\n15 / 10 ipm Print Speed\r\n200 Sheet Capacity (100 Cassette, 100 Rear Feed)\r\nAuto 2-Sided Printing\r\n1,000 Page Duty Cycle\r\nMicro SD Slot,ENERGY STAR, EPEAT Silver\r\n1 Year Warranty\r\nPrint with your voice. Just say “Alexa, discover my printer”\r\nWhat’s in the box\r\nPIXMA TR8620, Documentation, Set of Standard Ink Tanks, RJ-11 Telephone/Modem Cords, Power Cord",
+   "brand": "Bronze CS",
+   "base_price": "7000.00",
+   "stock": 10,
+   "image": "products/18-2.jpg",
+   "is_available": true,
+   "tags": "HomePop Uphols Table Modern Hot 2",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Apple iPhone 14 Pro Max, 256GB, Space Black",
+   "slug": "apple-iphone-14-pro-max-256gb-space-black",
+   "category": "electronics",
+   "vendor": "chm",
+   "short_details": "Never run out of ink. Connect your printer to Alexa and receive notifications when you’re running low. Alexa can even place a smart reorder from Amazon on your behalf, if you enroll in smart reorders\r\nEnrolling in Smart Reorders with Alexa ensures that you never have too much or too little ink supplies. No subscription needed.\r\nWireless 4-in-1 (Print | Copy | Scan | Fax)\r\n15 / 10 ipm Print Speed",
+   "description": "About this item\r\nNever run out of ink. Connect your printer to Alexa and receive notifications when you’re running low. Alexa can even place a smart reorder from Amazon on your behalf, if you enroll in smart reorders\r\nEnrolling in Smart Reorders with Alexa ensures that you never have too much or too little ink supplies. No subscription needed.\r\nWireless 4-in-1 (Print | Copy | Scan | Fax)\r\n15 / 10 ipm Print Speed\r\n200 Sheet Capacity (100 Cassette, 100 Rear Feed)\r\nAuto 2-Sided Printing\r\n1,000 Page Duty Cycle\r\nMicro SD Slot,ENERGY STAR, EPEAT Silver\r\n1 Year Warranty\r\nPrint with your voice. Just say “Alexa, discover my printer”\r\nWhat’s in the box\r\nPIXMA TR8620, Documentation, Set of Standard Ink Tanks, RJ-11 Telephone/Modem Cords, Power Cord",
+   "brand": "Apple",
+   "base_price": "450000.00",
+   "stock": 9,
+   "image": "products/21-2.jpg",
+   "is_available": true,
+   "tags": "Apple iPhone 14 Pro Max, 256GB, Space Black",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "HP DeskJet Wireless Color inkjet-print 2",
+   "slug": "hp-deskjet-wireless-color-inkjet-print-2",
+   "category": "electronics",
+   "vendor": "chm",
+   "short_details": "Never run out of ink. Connect your printer to Alexa and receive notifications when you’re running low. Alexa can even place a smart reorder from Amazon on your behalf, if you enroll in smart reorders\r\nEnrolling in Smart Reorders with Alexa ensures that you never have too much or too little ink supplies. No subscription needed.\r\nWireless 4-in-1 (Print | Copy | Scan | Fax)\r\n15 / 10 ipm Print Speed",
+   "description": "About this item\r\nNever run out of ink. Connect your printer to Alexa and receive notifications when you’re running low. Alexa can even place a smart reorder from Amazon on your behalf, if you enroll in smart reorders\r\nEnrolling in Smart Reorders with Alexa ensures that you never have too much or too little ink supplies. No subscription needed.\r\nWireless 4-in-1 (Print | Copy | Scan | Fax)\r\n15 / 10 ipm Print Speed\r\n200 Sheet Capacity (100 Cassette, 100 Rear Feed)\r\nAuto 2-Sided Printing\r\n1,000 Page Duty Cycle\r\nMicro SD Slot,ENERGY STAR, EPEAT Silver\r\n1 Year Warranty\r\nPrint with your voice. Just say “Alexa, discover my printer”\r\nWhat’s in the box\r\nPIXMA TR8620, Documentation, Set of Standard Ink Tanks, RJ-11 Telephone/Modem Cords, Power Cord",
+   "brand": "HP",
+   "base_price": "25000.00",
+   "stock": 10,
+   "image": "products/p2-1.jpg",
+   "is_available": true,
+   "tags": "HP DeskJet Wireless Color inkjet-print 2",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Gambluss streetwear Drop Shoulder summer jersey T-Shirt-Navy",
+   "slug": "gambluss-streetwear-drop-shoulder-summer-jersey-t-shirt-navy",
+   "category": "fashion",
+   "vendor": "chm",
+   "short_details": "Regular fit / Drop Shoulder\r\nNeck ribbed\r\nCuff hem\r\n100% cotton jersey\r\nSourced through Better Cotton via a system of mass balance and therefore this product may not contain Better Cotton\r\nImported",
+   "description": "Introducing our incredibly comfortable and cozy tee that you won't be able to resist wearing over and over again. With its effortless and basic design, this gambluss tee adds a touch of street style to your wardrobe. The minimalist aesthetic and clean look make it perfect for everyday wear. Featuring a soft cotton fabric with a printed logo, it exudes a classic charm that effortlessly pairs with any outfit for ultimate versatility. We are proud to mention that the cotton used in this product is sourced through Better Cotton, which follows a responsible chain of custody model called mass balance. As a result, while the cotton isn't physically traceable to the end product, it provides a sustainable and ethical choice you can feel good about. Upgrade your wardrobe with this must-have tee that combines comfort, style, and responsible sourcing.\r\n\r\n\r\nRegular fit / Drop Shoulder\r\nNeck ribbed\r\nCuff hem\r\n100% cotton jersey\r\nSourced through Better Cotton via a system of mass balance and therefore this product may not contain Better Cotton\r\nImported",
+   "brand": "Gambluss Wardrobe",
+   "base_price": "999.00",
+   "stock": 100,
+   "image": "products/lg_r0FpbqNaBPxnxu1HI51j8uY7UGM5IyV8MtxHZbSL_1.jpg",
+   "is_available": true,
+   "tags": "Gambluss Wardrobe",
+   "colors": [],
+   "sizes": [
+    {
+     "size_label": "Small",
+     "image": "products/lg_r0FpbqNaBPxnxu1HI51j8uY7UGM5IyV8MtxHZbSL_1_clw1kVr.jpg",
+     "price": "999.00"
+    },
+    {
+     "size_label": "Medium",
+     "image": "products/lg_r0FpbqNaBPxnxu1HI51j8uY7UGM5IyV8MtxHZbSL_1_SxDtbOx.jpg",
+     "price": "1500.00"
+    },
+    {
+     "size_label": "Large",
+     "image": "products/lg_r0FpbqNaBPxnxu1HI51j8uY7UGM5IyV8MtxHZbSL_1_NFYQBWq.jpg",
+     "price": "2000.00"
+    }
+   ]
+  },
+  {
+   "name": "Zero® Wave Pro Earbuds | High-Performance Audio | Bluetooth 5.3 | ENC Noise Reduction",
+   "slug": "zero-wave-pro-earbuds",
+   "category": "electronics",
+   "vendor": "campus",
+   "short_details": "Bluetooth 5.3: Stable, long-range connectivity for uninterrupted listening.\r\nENC Noise Reduction: Dual microphones for clear call quality.\r\nLong Battery Life: Up to 42 hours of total playtime with a quick Type-C charging case.\r\nVoice Assistant Support: Compatible with Siri and Google Assistant for hands-free control.\r\nIPX-5 Waterproof: Built for workouts and outdoor use, resistant to sweat and water.\r\nTouch Controls: Intuitive controls for music, calls, and virtual assistant management.",
+   "description": "Key Features:\r\n\r\nBluetooth 5.3: Stable, long-range connectivity for uninterrupted listening.\r\nENC Noise Reduction: Dual microphones for clear call quality.\r\nLong Battery Life: Up to 42 hours of total playtime with a quick Type-C charging case.\r\nVoice Assistant Support: Compatible with Siri and Google Assistant for hands-free control.\r\nIPX-5 Waterproof: Built for workouts and outdoor use, resistant to sweat and water.\r\nTouch Controls: Intuitive controls for music, calls, and virtual assistant management.\r\nExperience true wireless freedom and superior audio performance with the Wave Pro Earbuds—your ultimate companion for music, calls, and more.\r\n\r\n\r\nSpecifications of Zero® Wave Pro Earbuds | High-Performance Audio | Bluetooth 5.3 | ENC Noise Reduction\r\nBrandZero LifestyleSKU596297551_PK-2750177420Headphone FeaturesWater Resistant,Sweat Proof,Built in MicrophoneExpress deliveryKarachiConditionBrand NewBluetoothYesCompatible DevicesNot SpecifiedCompatible Operating SystemAndroid",
+   "brand": "Zero",
+   "base_price": "4799.00",
+   "stock": 500,
+   "image": "products/929840965e0674484ed9a4df6b2280fb.jpg_400x400q80.jpg",
+   "is_available": true,
+   "tags": "",
+   "colors": [
+    {
+     "color_name": "Black",
+     "color_code": "8398493",
+     "image": "products/929840965e0674484ed9a4df6b2280fb.jpg_400x400q80_Vfx21j8.jpg",
+     "price": "2000.00"
+    }
+   ],
+   "sizes": [
+    {
+     "size_label": "Large",
+     "image": "products/929840965e0674484ed9a4df6b2280fb.jpg_400x400q80_NjlWtFJ.jpg",
+     "price": "10000.00"
+    }
+   ]
+  },
+  {
+   "name": "GREY COTTON CASUAL KAMEEZ SHALWAR",
+   "slug": "grey-cotton-casual-kameez-shalwar",
+   "category": "mens-fashion",
+   "vendor": "jamal",
+   "short_details": "Color\tGrey\r\nFabric\tCotton\r\nProduct Category\tCasual Kameez Shalwar\r\nSeason\tSummer Collection\r\nDisclaimer\tDue to the photographic lighting & different screen calibrations, the colors of the original product may slightly vary from the picture",
+   "description": "Color\tGrey\r\nFabric\tCotton\r\nProduct Category\tCasual Kameez Shalwar\r\nSeason\tSummer Collection\r\nDisclaimer\tDue to the photographic lighting & different screen calibrations, the colors of the original product may slightly vary from the picture",
+   "brand": "J.",
+   "base_price": "6367.50",
+   "stock": 100,
+   "image": "products/jjks-47463_1_.png",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "GREYISH GREEN BLENDED CASUAL KAMEEZ SHALWAR",
+   "slug": "greyish-green-blended-casual-kameez-shalwar",
+   "category": "mens-fashion",
+   "vendor": "jamal",
+   "short_details": "Traditional and simple, this greyish green blended casual kameez shalwar is made for comfortable daily wear and relaxed occasions.",
+   "description": "More Information\r\nColor\tGreyish Green\r\nFabric\tBlended\r\nProduct Category\tCasual Kameez Shalwar\r\nSeason\tSummer Collection\r\nDisclaimer\tDue to the photographic lighting & different screen calibrations, the colors of the original product may slightly vary from the picture",
+   "brand": "J.",
+   "base_price": "6367.50",
+   "stock": 10,
+   "image": "products/jjks-47444_1_.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "WASIM AKRAM 502",
+   "slug": "wasim-akram-502",
+   "category": "mens-fashion",
+   "vendor": "jamal",
+   "short_details": "(!) Fragrances and perfumes are not shipped internationally due to the courier and airline DG policy.  \r\n\r\nCategory: Fougere Fruity\r\n\r\nMain Accords: Citrus, Cardamom, Apple, Lavender, Patchouli, Oakmoss\r\n\r\nSize: 100ml Bottle",
+   "description": "Size\t100ml\r\nFragrance Category\tFougere, Fruity\r\nCare Instructions\t\r\nProper storage of perfume is essential to maintain its quality and ensure a longer shelf life. Here are some tips on how to store perfume:\r\n\r\nKeep it in a Cool and Dark Place:\r\nPerfume is sensitive to light and temperature. Exposure to light and heat can alter its composition and fragrance. Store your perfume in a cool, dark place, away from direct sunlight.\r\nAvoid Extreme Temperatures:\r\nExtreme temperatures can also affect the chemical composition of the perfume. Avoid storing it in places where temperatures fluctuate dramatically, such as near windows or heaters.\r\nKeep the Bottle Sealed:\r\nEnsure that the bottle is tightly sealed when not in use. Exposure to air can cause the fragrance to deteriorate over time.\r\nUse the Original Packaging:\r\nIf possible, store the perfume in its original box. The packaging is designed to protect the fragrance from external factors that could affect its quality.\r\nAvoid Humidity:\r\nHumidity can degrade the quality of perfume. Keep it away from humid environments, such as bathrooms.\r\nAs for the shelf life of Eau de Parfum (EDP), it generally lasts longer than lighter concentrations such as Eau de Toilette (EDT) or Cologne. However, the shelf life can vary depending on several factors, including the specific ingredients used,",
+   "brand": "WASIM AKRAM",
+   "base_price": "5015.00",
+   "stock": 200,
+   "image": "products/wasim_akram_502_1__3_1.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "MIKA",
+   "slug": "mika",
+   "category": "mens-fashion",
+   "vendor": "jamal",
+   "short_details": "(!) Fragrances and perfumes are not shipped internationally due to the courier and airline DG policy.  \r\n\r\nCategory: Fruity Marine\r\n\r\nMain Accords: Citrus, Fresh, Green, Sea Notes, Tomato Leaf, Patchouli\r\n\r\nSize: 50ml Bottle",
+   "description": "More Information\r\nSize\t50ml\r\nFragrance Category\tFruity, Marine\r\nCare Instructions\t\r\nProper storage of perfume is essential to maintain its quality and ensure a longer shelf life. Here are some tips on how to store perfume:\r\n\r\nKeep it in a Cool and Dark Place:\r\nPerfume is sensitive to light and temperature. Exposure to light and heat can alter its composition and fragrance. Store your perfume in a cool, dark place, away from direct sunlight.\r\nAvoid Extreme Temperatures:\r\nExtreme temperatures can also affect the chemical composition of the perfume. Avoid storing it in places where temperatures fluctuate dramatically, such as near windows or heaters.\r\nKeep the Bottle Sealed:\r\nEnsure that the bottle is tightly sealed when not in use. Exposure to air can cause the fragrance to deteriorate over time.\r\nUse the Original Packaging:\r\nIf possible, store the perfume in its original box. The packaging is designed to protect the fragrance from external factors that could affect its quality.\r\nAvoid Humidity:\r\nHumidity can degrade the quality of perfume. Keep it away from humid environments, such as bathrooms.\r\nAs for the shelf life of Eau de Parfum (EDP), it generally lasts longer than lighter concentrations such as Eau de Toilette (EDT) or Cologne. However, the shelf life can vary depending on several factors, including the specific ingredients used, the quality of the perfume, and how it's stored.\r\n\r\nIn general, a well-stored EDP can last anywhere from 3 to 5 years or even longer. Over time, the fragrance may undergo subtle changes, but it should remain usable. To maximize the shelf life of your perfume, follow the storage tips mentioned above.",
+   "brand": "MIKA",
+   "base_price": "2550.00",
+   "stock": 100,
+   "image": "products/mika-front_1_1.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Samsung Galaxy S25 Ultra (12GB-256GB)",
+   "slug": "samsung-galaxy-s25-ultra-12gb-256gb",
+   "category": "electronics",
+   "vendor": "pricewise",
+   "short_details": "brand warranty\r\n1 Year\r\nSamsung PK Warranty\r\npta approved\r\nPTA Approved\r\nMobiles\r\n100% Original\r\nPackaging Video\r\nSee Your Product\r\nfree delivery\r\nFast Delivery",
+   "description": "General Features\r\nRelease Date\t21 Mar 2025\r\nSIM Support\tDual-SIM\r\nPhone Dimensions\t162.8 x 77.6 x 8.2\r\nPhone Weight\t218\r\nOperating System\tAndroid\r\nDisplay\r\nScreen Size\t6.9 Inches\r\nScreen Resolution\t3120 x 1440\r\nScreen Type\tQuad HD+ Dynamic AMOLED 2X\r\nScreen Protection\tN/A\r\nMemory\r\nInternal Memory\t256gb\r\nRAM\t12gb\r\nCard Slot\tN/A\r\nPerformance\r\nProcessor\tQualcomm Snapdragon 8 Elite (3nm)\r\nGPU\tAdreno 830\r\nBattery\r\nType\t5000mAh\r\nCamera\r\nFront Camera\t12 MP\r\nFront Flash Light\tYes\r\nFront Video Recording\tYes\r\nBack Flash Light\tYes\r\nBack Camera\t200 MP + 50 MP + 50 MP + 10 MP\r\nBack Video Recording\tUHD 8K (7680 x 4320) @30fps , Optical Zoom 3x and 5x, Optical quality Zoom 2x and 10x (Enabled by Adaptive Pixel sensor) , Digital Zoom up to 100x\r\nConnectivity\r\nBluetooth\tYes\r\n3G\tYes\r\n4G/LTE\tYes\r\n5G\tYes\r\nRadio\tNo\r\nWiFi\tYes\r\nNFC\tYes",
+   "brand": "Samsung",
+   "base_price": "375999.00",
+   "stock": 100,
+   "image": "products/samsung-galaxy-s25-ultra-12gb-256gb-pakistan-priceoye-h0km1-500x500.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Xiaomi Redmi Note 13",
+   "slug": "xiaomi-redmi-note-13",
+   "category": "electronics",
+   "vendor": "pricewise",
+   "short_details": "brand warranty\r\n1 Year\r\nXiaomi PK Warranty\r\npta approved\r\nPTA Approved\r\nMobiles\r\n100% Original\r\nPackaging Video\r\nSee Your Product\r\nfree delivery\r\nFast Delivery\r\nAll Over Pakistan",
+   "description": "General Features\r\nRelease Date\t26 Jan 2024\r\nSIM Support\tSIM 1 + Hybrid (SIM or MicroSD)\r\nPhone Dimensions\t162.2 x 75.5 x 7.97 mm\r\nPhone Weight\t188.5g\r\nOperating System\tMIUI 14\r\nDisplay\r\nScreen Size\t6.67 Inches\r\nScreen Resolution\t2400 x 1080\r\nScreen Type\tAMOLED\r\nScreen Protection\tCorning Gorilla Glass 3\r\nMemory\r\nInternal Memory\t128GB, 256GB\r\nRAM\t6GB, 8GB (Expandable storage up to 1TB)\r\nCard Slot\tN/A\r\nPerformance\r\nProcessor\tSnapdragon 685\r\nGPU\tAdreno 610\r\nBattery\r\nType\t5000mAh\r\nCamera\r\nFront Camera\t16MP\r\nFront Flash Light\tN/A\r\nFront Video Recording\t1080p at 30fps, 720p at 30fps\r\nBack Flash Light\tYes\r\nBack Camera\t108MP+8MP+2MP\r\nBack Video Recording\t1080p at 30fps, 720p at 30fps\r\nConnectivity\r\nBluetooth\tYes\r\n3G\tYes\r\n4G/LTE\tYes\r\n5G\tNo\r\nRadio\tunspecified\r\nWiFi\tYes\r\nNFC\tNo",
+   "brand": "Xiaomi Redmi",
+   "base_price": "43100.00",
+   "stock": 100,
+   "image": "products/xiaomi-redmi-note-13-pakistan-priceoye-47be2-500x500.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "500ML Water Bottle Vacuum Insulated Flask Thermal Sport Chilly Hot Cold Cup Stainless Steel Marble Head Cup",
+   "slug": "500ml-water-bottle-vacuum-insulated-flask-thermal-sport-chilly-hot-cold-cup-stainless-steel-marble-head-cup",
+   "category": "deals",
+   "vendor": "chm",
+   "short_details": "Capacity: 500ml\r\nMaterial:\r\nWithin:304 Stainless steel\r\nOuter:201 Stainless steel\r\nCold for up to 24 hours\r\nHot for up to 12 hours\r\nVacuum Insulated Flask\r\nRust-proof and leak-proof",
+   "description": "Features:\r\n1. Durable and dependable\r\n2. Rust-proof and leak-proof.\r\n3. High-quality food grade 201/304 stainless steel on both inside and outside walls, scratching resistance, 100% BPA-free for health safety.\r\n4. Lightweight design, perfect for your gym bag, car, bicycle, and backpack to enjoy your long hikes, trekking, hot yoga class, long-load trip, or any other outdoor activities.\r\n5. Fashion design, looks cool, you will love it yourself and want to gift it to family and your friends.\r\nSpecification:\r\nCapacity: 500ml\r\nMaterial:\r\nwithin:304 Stainless steel\r\nouter:201 Stainless steel\r\nCold for up to 24 hours\r\nHot for up to 12 hours\r\nNotice:\r\n1. As for the lighting effects, the color of objects may be a little different from pictures.\r\nPackage:\r\n1x water bottle",
+   "brand": "BestValue.PK",
+   "base_price": "1499.00",
+   "stock": 10,
+   "image": "products/500-ml-water-s-steel-marble-head-cup-1.jpg",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Sonex Non-Stick Casserole With Glass Lid",
+   "slug": "sonex-non-stick-casserole-with-glass-lid",
+   "category": "deals",
+   "vendor": "campus",
+   "short_details": "Non-Stick Coating\r\nGlass lid with air hole\r\nFast absorption,",
+   "description": "Non-Stick Coating\r\nGlass lid with air hole\r\nBase with efficient heat distribution for even cooking\r\nFast absorption, even and long storage of heat\r\nECO Friendly\r\nChemical Free Natural Coating\r\nHigh quality\r\nDurable cookware\r\nIdeal for smart cooking",
+   "brand": "Sonex Cookware",
+   "base_price": "6999.00",
+   "stock": 10,
+   "image": "products/sonex-non-stick-casserole-with-glass-lid-1.jpg",
+   "is_available": true,
+   "tags": "Casserole, GlassLid, Non Stick Coating",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Shoe Organizer Stand – 5 Tier",
+   "slug": "shoe-organizer-stand-5-tier",
+   "category": "deals",
+   "vendor": "campus",
+   "short_details": "5 Tiers Shoe organizer stand\r\nPremium Quality\r\nEasy snap-in stabilizer feet for added support\r\nDurable\r\nNon-slip rails\r\nNo tools required assembly",
+   "description": "5 Tiers Shoe organizer stand\r\nPremium Quality\r\nEasy snap-in stabilizer feet for added support\r\nDurable\r\nNon-slip rails\r\nNo tools required assembly",
+   "brand": "Best Value",
+   "base_price": "1199.00",
+   "stock": 10,
+   "image": "products/97ac36a4e72ac22135b7106765df4bcf.jpg_2200x2200q80.jpg",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Fancy & Portable Collapsible Clothes Closet Wardrobe Organizer – 88130A",
+   "slug": "fancy-portable-collapsible-clothes-closet-wardrobe-organizer-88130a",
+   "category": "deals",
+   "vendor": "campus",
+   "short_details": "Foldable\r\nW x H x D: 1300 mm x 1750 mm x 450 mm (4 ft 3 in x 5 ft 8 in x 1 ft 5 in)\r\nPrimary Material: Plastic\r\nSecondary Material: Metal\r\n3-door\r\nRoll curtain door design\r\nEasy to assemble\r\nWaterproof\r\nDustproof will not fade\r\nAnti-corrosive, wear-resistant, air permeable",
+   "description": "Made from a selected cloth cover, high-quality steel tube, and PP Plastic Connectors, this portable storage closet will meet your long-term storage needs.\r\nBeautifully designed and innovatively crafted modern design. With Movable clothes hanging rod and 8 storage shelves offers you enough space both for your longer outfits and folded clothes\r\nMade from strong and durable material. Powder-coated surface. Portable & light weight easy to carry and put anywhere.\r\nDurable, Portable, Sophisticated, and Stylish Design. For those who love organized living.\r\nA great size of 130 x 45 x 175 which makes it suitable for organizing your small rooms and walk-in closet",
+   "brand": "Sofi",
+   "base_price": "6499.00",
+   "stock": 10,
+   "image": "products/fancy-portable-collapsible-clothes-closet-wardrobe-organizer-6.jpg",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "3 Piece - Embroidered Cotton Satin Suit",
+   "slug": "3-piece-embroidered-cotton-satin-suit",
+   "category": "women-fashion",
+   "vendor": "silk",
+   "short_details": "Make a statement in our embroidered light yellow fine cotton satin shirt and cotton trousers ensemble with a crinkle chiffon dupatta.\r\n\r\nUnstitched 3-Piece",
+   "description": "Shirt\r\nDyed Embroidered Fine Cotton Satin Shirt Sleeves 0.70m\r\nDyed Fine Cotton Satin Shirt Back 1.15m\r\nEmbroidered Neckline 1pc\r\nDyed Embroidered Fine Cotton Satin Shirt Front Panels 5pc\r\nEmbroidered Hem & Front Border 3pc\r\nFabric: Fine Cotton Satin\r\nColour: Light Yellow\r\n\r\nDupatta\r\nDyed Embroidered Crinkle Chiffon Dupatta 2.50m\r\nFabric: Crinkle Chiffon\r\nColour: Light Yellow\r\n\r\nTrouser\r\nDyed Cotton Trouser 2.50m\r\nFabric: Cotton\r\nColour: Light Yellow",
+   "brand": "Sapphire",
+   "base_price": "9990.00",
+   "stock": 10,
+   "image": "products/0U3PELX25V37_2.jpg",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "3 Piece - Embroidered Lawn Suit",
+   "slug": "3-piece-embroidered-lawn-suit",
+   "category": "women-fashion",
+   "vendor": "silk",
+   "short_details": "Make a statement in our embroidered yellow lawn shirt and cotton trousers ensemble with an off white voile dupatta.\r\n\r\nUnstitched 3-Piece",
+   "description": "Shirt\r\nPrinted Embroidered Lawn Shirt Sleeves 0.66m\r\nPrinted Lawn Shirt Back 1.15m\r\nPrinted Embroidered Lawn Shirt Front Panels 3pc\r\nEmbroidered Front Borders 2pc\r\nFabric: Lawn\r\nColour: Yellow\r\n\r\nDupatta\r\nPrinted Voile Dupatta 2.50m\r\nFabric: Voile\r\nColour: Off White\r\n\r\nTrouser\r\nPrinted Cotton Trouser 2.50m\r\nFabric: Cotton\r\nColour: Yellow",
+   "brand": "Sapphire",
+   "base_price": "5590.00",
+   "stock": 10,
+   "image": "products/U3PEDY25V216_2.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Monaco",
+   "slug": "monaco",
+   "category": "women-fashion",
+   "vendor": "silk",
+   "short_details": "Embrace the enchanting and subtle notes of Monaco's oriental scent with hints of citrus and spice.\r\n\r\nComposition:\r\nTop Notes: Citrus, Fruity, Spicy\r\nMiddle Notes: Floral, Fruity, Woody\r\nBase Notes: Ambery, Floral, Moss\r\n\r\nType:\r\nOriental\r\n\r\nSize:\r\n80 ml",
+   "description": "Embrace the enchanting and subtle notes of Monaco's oriental scent with hints of citrus and spice.\r\n\r\nComposition:\r\nTop Notes: Citrus, Fruity, Spicy\r\nMiddle Notes: Floral, Fruity, Woody\r\nBase Notes: Ambery, Floral, Moss\r\n\r\nType:\r\nOriental\r\n\r\nSize:\r\n80 ml",
+   "brand": "Sapphire",
+   "base_price": "4490.00",
+   "stock": 10,
+   "image": "products/000000FRL079_3.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Amalfi",
+   "slug": "amalfi",
+   "category": "women-fashion",
+   "vendor": "silk",
+   "short_details": "For a refreshing floral statement, immerse yourself in our Amalfi scented perfume.\r\n\r\nComposition:\r\nTop Notes: Coconut, Lemon, Orange\r\nMiddle Notes: Jasmine, Lily Of The Valley, Orange Blossom\r\nBase Notes: Ambergris, Cedarwood, Moss\r\n\r\nType: Floral\r\n\r\nSize:\r\n80 ml",
+   "description": "For a refreshing floral statement, immerse yourself in our Amalfi scented perfume.\r\n\r\nComposition:\r\nTop Notes: Coconut, Lemon, Orange\r\nMiddle Notes: Jasmine, Lily Of The Valley, Orange Blossom\r\nBase Notes: Ambergris, Cedarwood, Moss\r\n\r\nType: Floral\r\n\r\nSize:\r\n80 ml",
+   "brand": "Sapphire",
+   "base_price": "4490.00",
+   "stock": 100,
+   "image": "products/000000FRL080_3.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Women Luxury Brand New Geneva Ladies Quartz-Watch Gifts For Girl Full Stainless Steel Rhinestone wrist watches",
+   "slug": "women-luxury-brand-new-geneva-ladies-quartz-watch-gifts-for-girl-full-stainless-steel-rhinestone-wrist-watches",
+   "category": "women-fashion",
+   "vendor": "silk",
+   "short_details": "Keep it sleek and stylish with our maroon wallet, designed for everyday elegance.\r\n\r\nDetails:\r\nColour: Maroon\r\nMaterial: Faux leather\r\nMeasurement: Height: 4 Inches , Width: 5 Inches",
+   "description": "Keep it sleek and stylish with our maroon wallet, designed for everyday elegance.\r\n\r\nDetails:\r\nColour: Maroon\r\nMaterial: Faux leather\r\nMeasurement: Height: 4 Inches , Width: 5 Inches",
+   "brand": "Sapphire",
+   "base_price": "1245.00",
+   "stock": 100,
+   "image": "products/000000HB1589_1.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Maroon Shhoulder Bag",
+   "slug": "maroon-shhoulder-bag",
+   "category": "women-fashion",
+   "vendor": "silk",
+   "short_details": "Elevate your everyday with our maroon crocodile-embossed faux leather bag, designed with a magnetic button closure and an adjustable shoulder strap.\r\nDetails:\r\nColour: Maroon\r\nMaterial: Faux leather\r\nMeasurement: H: 6.5\" , L: 11\", W: 4\"",
+   "description": "Elevate your everyday with our maroon crocodile-embossed faux leather bag, designed with a magnetic button closure and an adjustable shoulder strap.\r\nDetails:\r\nColour: Maroon\r\nMaterial: Faux leather\r\nMeasurement: H: 6.5\" , L: 11\", W: 4\"",
+   "brand": "Sapphire",
+   "base_price": "4290.00",
+   "stock": 500,
+   "image": "products/000000HB1637_3.webp",
+   "is_available": true,
+   "tags": "Casserole, GlassLid, Non Stick Coating",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Xiaomi Redmi Note 14",
+   "slug": "xiaomi-redmi-note-14",
+   "category": "electronics",
+   "vendor": "pricewise",
+   "short_details": "brand warranty\r\n1 Year\r\nXiaomi PK Warranty\r\npta approved\r\nPTA Approved\r\nMobiles\r\n100% Original\r\nPackaging Video\r\nSee Your Product\r\nFree delivery\r\nFast Delivery",
+   "description": "General Features\r\nRelease Date\t15 Jan 2025\r\nSIM Support\tDual Sim\r\nPhone Dimensions\t163.25×76.55×8.16mm\r\nPhone Weight\t196.5g\r\nOperating System\tAndroid 14\r\nDisplay\r\nScreen Size\t6.7 Inches\r\nScreen Resolution\t2400 x 1080, 1800 nits peak brightness\r\nScreen Type\tAMOLED\r\nScreen Protection\tCorning Gorilla Glass 5\r\nMemory\r\nInternal Memory\t128/256GB\r\nRAM\t8GB\r\nCard Slot\tYes\r\nPerformance\r\nProcessor\tHelio G99-Ultra, 6nm Octa-core\r\nGPU\tMali-G57 MC2\r\nBattery\r\nType\t5500mAh (typ) high-capacity battery\r\nCamera\r\nFront Camera\t20 MP\r\nFront Flash Light\tYes\r\nFront Video Recording\tVideo (1080p@30fps)\r\nBack Flash Light\tYes\r\nBack Camera\t108MP+2MP+2MP\r\nBack Video Recording\tHDR, Panorama, Video (1080p@30fps)\r\nConnectivity\r\nBluetooth\tYes\r\n3G\tYes\r\n4G/LTE\tYes\r\n5G\tN/A\r\nRadio\tN/A\r\nWiFi\tYes\r\nNFC\tYes (Region Dependent)",
+   "brand": "Xiaomi Redmi",
+   "base_price": "45999.00",
+   "stock": 5,
+   "image": "products/xiaomi-redmi-note-14-pakistan-priceoye-vvnlz-500x500.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Redmi Buds 4 Active",
+   "slug": "redmi-buds-4-active",
+   "category": "electronics",
+   "vendor": "pricewise",
+   "short_details": "3 Days Warranty\r\nBrand Warranty\r\nEasy Returns\r\nEasy Returns\r\nFree of Charge\r\n100% Original\r\nPackaging Video\r\nSee Your Product\r\nFree delivery\r\nFast Delivery\r\nAll Over Pakistan",
+   "description": "General Features\r\nNoise Cancellation\tYes\r\nWater Resistant\tIPX4\r\nCharging Interface\tUSB-C\r\nAuto Pairing\tNo\r\nCompatibility\tAndroid & iOS\r\nMic\tYes\r\nDriver Size\t12mm\r\nConnectivity\r\nBluetooth Version\tv5.3\r\nBluetooth Range\t10m\r\nMicrophone\tYes\r\nBattery\r\nCapacity for buds\t34*2mAh\r\nCapacity for Case\t440mAh\r\nPlaytime\t28 hours\r\nCharging Time\tAbout 2 hours",
+   "brand": "Redmi",
+   "base_price": "4199.00",
+   "stock": 19,
+   "image": "products/redmi-buds-4-active-pakistan-priceoye-0laiv-500x500.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  },
+  {
+   "name": "Tecno Square S3 Bluetooth Speaker",
+   "slug": "tecno-square-s3-bluetooth-speaker",
+   "category": "electronics",
+   "vendor": "pricewise",
+   "short_details": "3 Days\r\nBrand Warranty\r\nEasy Returns\r\nEasy Returns\r\nFree of Charge\r\n100% Original\r\nPackaging Video\r\nSee Your Product\r\nFree delivery\r\nFast Delivery\r\nAll Over Pakistan",
+   "description": "General Features\r\nDimensions\tN/A\r\nWeight\tLight Weight\r\nModel\tSquare S3\r\nDisplay\tN/A\r\nWaterproof\tNo\r\nBattery\r\nType\tLi-Po battery\r\nCharging Time\t3 Hours",
+   "brand": "Tecno Squre",
+   "base_price": "4000.00",
+   "stock": 120,
+   "image": "products/tecno-square-s3-bluetooth-speaker-pakistan-priceoye-cwsje-500x500.webp",
+   "is_available": true,
+   "tags": "",
+   "colors": [],
+   "sizes": []
+  }
+ ]
+}

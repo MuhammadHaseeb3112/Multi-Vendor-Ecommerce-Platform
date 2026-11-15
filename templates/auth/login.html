@@ -22,6 +22,23 @@
       {% endfor %}
       {% endif %}
 
+      {% if DEMO_MODE %}
+      <div class="alert alert-info rounded-4">
+        <strong>Live demo.</strong> Sign in as any role, password <code>{{ demo_password }}</code>:
+        <div class="d-flex gap-2 mt-2">
+          {% for label, username in demo_accounts %}
+          <form method="post" class="flex-fill">
+            {% csrf_token %}
+            <input type="hidden" name="username" value="{{ username }}">
+            <input type="hidden" name="password" value="{{ demo_password }}">
+            <button type="submit" class="btn btn-sm btn-outline-dark w-100">{{ label }}</button>
+          </form>
+          {% endfor %}
+        </div>
+        <small class="text-muted d-block mt-2">Data resets every night. No real payments or emails.</small>
+      </div>
+      {% endif %}
+
       <div class="card shadow rounded-4 p-4">
         <form method="post" novalidate>
           {% csrf_token %}

@@ -2,6 +2,8 @@
 
 from datetime import datetime
 
+from django.conf import settings
+
 from .models import Cart, Category
 
 
@@ -12,6 +14,21 @@ def cart_total_items(request):
     cart = Cart.get_or_create_cart(request)
     return {'cart': cart}
 
+
+
+def demo(request):
+    """Expose demo-mode details (shared logins shown on the login page)."""
+    if not settings.DEMO_MODE:
+        return {"DEMO_MODE": False}
+    return {
+        "DEMO_MODE": True,
+        "demo_password": settings.DEMO_PASSWORD,
+        "demo_accounts": [
+            ("Customer", "demo_customer"),
+            ("Vendor", "demo_vendor"),
+            ("Admin", "demo_admin"),
+        ],
+    }
 
 
 def categories(request):

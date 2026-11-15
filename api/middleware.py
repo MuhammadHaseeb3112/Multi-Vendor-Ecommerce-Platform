@@ -1,3 +1,7 @@
+from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import redirect
+
 from .models import Cart
 
 
@@ -29,3 +33,31 @@ class CartMiddleware:
         # Continue processing request
         response = self.get_response(request)
         return response
+
+
+class DemoGuardMiddleware:
+    """In DEMO_MODE, block changes that would lock other visitors out of the
+    shared demo logins: passwords, profiles and user/vendor management."""
+
+    LOCKED = (
+        '/profile/change-password/',
+        '/profile/edit/',
+        '/password-reset/',
+        '/reset/',
+        '/admin-panel/customers/',
+        '/admin-panel/vendors/',
+        '/vendor/edit-profile/',
+    )
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if (
+            settings.DEMO_MODE
+            and request.method not in ('GET', 'HEAD', 'OPTIONS')
+            and request.path.startswith(self.LOCKED)
+        ):
+            messages.warning(request, "This action is disabled in the public demo.")
+            return redirect(request.META.get('HTTP_REFERER') or 'home')
+        return self.get_response(request)

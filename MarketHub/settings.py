@@ -65,7 +65,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-MIDDLEWARE += ['api.middleware.CartMiddleware']
+MIDDLEWARE += ['api.middleware.CartMiddleware', 'api.middleware.DemoGuardMiddleware']
 
 ROOT_URLCONF = 'MarketHub.urls'
 
@@ -80,7 +80,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'api.context_processors.cart_total_items',
-                'api.context_processors.categories',   # Add this
+                'api.context_processors.categories',
+                'api.context_processors.demo',
             ],
         },
     },
@@ -105,6 +106,8 @@ CACHES = {
 LOGIN_MAX_FAILURES = 5
 LOGIN_MAX_FAILURES_PER_IP = 20
 LOGIN_LOCKOUT_SECONDS = 15 * 60
+# Set True only when the app sits behind your own reverse proxy (Caddy/nginx).
+TRUSTED_PROXY = os.getenv("TRUSTED_PROXY", "False").lower() in ("1", "true", "yes")
 
 # PostgreSQL when POSTGRES_DB is set (Docker / production), SQLite otherwise.
 if os.getenv("POSTGRES_DB"):
@@ -171,7 +174,15 @@ USE_TZ = True
 # ==========================================================
 # Email
 # ==========================================================
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# Public demo: shared demo logins (see `manage.py seed_demo`), no outgoing
+# email, and account/user management locked so visitors can't break it.
+DEMO_MODE = os.getenv("DEMO_MODE", "False").lower() in ("1", "true", "yes")
+DEMO_PASSWORD = os.getenv("DEMO_PASSWORD", "DemoPass123!")
+
+EMAIL_BACKEND = (
+    "django.core.mail.backends.dummy.EmailBackend" if DEMO_MODE
+    else "django.core.mail.backends.smtp.EmailBackend"
+)
 
 EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))

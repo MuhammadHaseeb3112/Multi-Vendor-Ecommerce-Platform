@@ -10,3 +10,4 @@ venv/
 db.sqlite3
 staticfiles/
 *.sql
+deploy/.env.prod

@@ -12,8 +12,18 @@ MAX_PER_IP = getattr(settings, "LOGIN_MAX_FAILURES_PER_IP", 20)
 LOCKOUT_SECONDS = getattr(settings, "LOGIN_LOCKOUT_SECONDS", 15 * 60)
 
 
+def client_ip(request):
+    """Visitor IP. Behind our own reverse proxy (TRUSTED_PROXY=True) REMOTE_ADDR
+    is the proxy, so use the address the proxy appended to X-Forwarded-For."""
+    if getattr(settings, "TRUSTED_PROXY", False):
+        forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "")
+        if forwarded:
+            return forwarded.split(",")[-1].strip()
+    return request.META.get("REMOTE_ADDR", "unknown")
+
+
 def _keys(request, identifier):
-    ip = request.META.get("REMOTE_ADDR", "unknown")
+    ip = client_ip(request)
     ident = (identifier or "").strip().lower()
     return f"login-fail:{ip}:{ident}", f"login-fail-ip:{ip}"
 
