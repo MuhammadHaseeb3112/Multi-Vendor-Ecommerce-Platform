@@ -5,13 +5,18 @@ class CartMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        # Media/static files don't need a cart (and parallel image requests
+        # used to create duplicate carts).
+        if request.path.startswith(('/media/', '/static/')):
+            return self.get_response(request)
+
         # Ensure session exists for anonymous users
         if not request.session.session_key:
             request.session.create()
 
         if request.user.is_authenticated:
             # Get or create cart for logged-in user
-            cart, _ = Cart.objects.get_or_create(user=request.user)
+            cart = Cart.for_user(request.user)
         else:
             # Get or create cart for anonymous user by session key
             session_key = request.session.session_key

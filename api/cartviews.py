@@ -97,7 +97,7 @@ def apply_coupon(request):
             messages.error(request, "Invalid coupon code.")
     return redirect('cart_view')
 def remove_coupon(request):
-    cart = Cart.objects.get(user=request.user)
+    cart = Cart.for_user(request.user)
     if cart.coupon:
         cart.coupon = None
         cart.save()

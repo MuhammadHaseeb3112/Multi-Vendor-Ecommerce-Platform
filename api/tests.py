@@ -156,3 +156,15 @@ class PaymentStorageTests(BaseTestCase):
 class PublicPagesTests(TestCase):
     def test_home_page_works_on_empty_database(self):
         self.assertEqual(self.client.get("/").status_code, 200)
+
+
+class DuplicateCartTests(BaseTestCase):
+    def test_duplicate_carts_are_merged(self):
+        a = Cart.objects.create(user=self.customer)
+        b = Cart.objects.create(user=self.customer)
+        b.items.create(product=self.product, quantity=1)
+        Cart.objects.create(user=self.customer)
+        self.client.force_login(self.customer)
+        self.assertEqual(self.client.get("/").status_code, 200)
+        self.assertEqual(Cart.objects.filter(user=self.customer).count(), 1)
+        self.assertEqual(Cart.for_user(self.customer).items.count(), 1)

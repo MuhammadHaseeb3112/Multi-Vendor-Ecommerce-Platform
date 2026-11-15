@@ -279,7 +279,7 @@ def update_cart_ajax(request):
         action = data.get('action')
 
         try:
-            cart = Cart.objects.get(user=request.user)
+            cart = Cart.for_user(request.user)
             cart_item = CartItem.objects.get(id=item_id, cart=cart)
         except (Cart.DoesNotExist, CartItem.DoesNotExist):
             return JsonResponse({'error': 'Cart item not found'}, status=404)

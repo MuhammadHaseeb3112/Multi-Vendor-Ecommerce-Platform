@@ -167,7 +167,7 @@ def login_view(request):
                 # --- Cart Merging Logic ---
                 session_key = request.session.session_key or request.session.create()
                 guest_cart = Cart.objects.filter(session_key=session_key, user=None).first()
-                user_cart, _ = Cart.objects.get_or_create(user=user, session_key=None)
+                user_cart = Cart.for_user(user)
                 if guest_cart and guest_cart != user_cart:
                     user_cart.merge_with(guest_cart)
 

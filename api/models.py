@@ -108,7 +108,7 @@ class Category(models.Model):
 # -------------------- Product --------------------
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     short_details = models.TextField()
     description = models.TextField()
@@ -266,10 +266,35 @@ class Cart(models.Model):
     def total_items(self):
         return sum(item.quantity for item in self.items.all())
 
+    @classmethod
+    def for_user(cls, user):
+        """Return the user's single cart.
+
+        Parallel requests (page + images + AJAX) can race and create more than
+        one cart for the same user. Merge any extras into the oldest one so the
+        user always has exactly one cart.
+        """
+        carts = list(cls.objects.filter(user=user).order_by('id'))
+        if not carts:
+            cart, _ = cls.objects.get_or_create(user=user, session_key=None)
+            return cart
+        main = carts[0]
+        for extra in carts[1:]:
+            try:
+                main.merge_with(extra)
+            except Exception:
+                pass  # already merged by a concurrent request
+        if main.session_key is not None:
+            main.session_key = None
+            main.save(update_fields=['session_key'])
+        if len(carts) > 1:
+            main.update_totals()
+        return main
+
     @staticmethod
     def get_or_create_cart(request):
         if request.user.is_authenticated:
-            cart, _ = Cart.objects.get_or_create(user=request.user, session_key=None)
+            cart = Cart.for_user(request.user)
         else:
             session_key = request.session.session_key
             if not session_key:
