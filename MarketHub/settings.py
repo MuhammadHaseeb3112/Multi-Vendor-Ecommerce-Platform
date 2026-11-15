@@ -92,6 +92,20 @@ WSGI_APPLICATION = 'MarketHub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Cache: stored in the database so login throttling is shared by all workers.
+# Create the table once with `python manage.py createcachetable` (Docker does it).
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "django_cache",
+    }
+}
+
+# Brute-force protection for the login form (see api/ratelimit.py)
+LOGIN_MAX_FAILURES = 5
+LOGIN_MAX_FAILURES_PER_IP = 20
+LOGIN_LOCKOUT_SECONDS = 15 * 60
+
 # PostgreSQL when POSTGRES_DB is set (Docker / production), SQLite otherwise.
 if os.getenv("POSTGRES_DB"):
     DATABASES = {

@@ -1,10 +1,9 @@
 
 
-from .models import Cart 
-
 from datetime import datetime
 
-from .models import Category
+from .models import Cart, Category
+
 
 def add_year(request):
     return {'year': datetime.now().year}

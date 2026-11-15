@@ -1,14 +1,16 @@
-from django.urls import reverse
+import base64
+from io import BytesIO
+
+import barcode
+import qrcode
+from barcode.writer import ImageWriter
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+
 from .models import Order
-import qrcode
-import barcode
-from barcode.writer import ImageWriter
-from io import BytesIO
-import base64
+
 
 def receipt_input_view(request):
     return render(request, 'receipt_input.html')

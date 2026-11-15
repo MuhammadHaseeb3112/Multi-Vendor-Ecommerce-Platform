@@ -1,26 +1,30 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.contrib.auth import get_user_model
-from .forms import UserForm, VendorForm
-from django.contrib.auth.forms import AuthenticationForm
-from .models import *
 import random
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.template.loader import render_to_string
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
+
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import (
     PasswordChangeView,
-    PasswordResetView,
-    PasswordResetDoneView,
+    PasswordResetCompleteView,
     PasswordResetConfirmView,
-    PasswordResetCompleteView
+    PasswordResetDoneView,
+    PasswordResetView,
 )
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+
+from .forms import ProfileForm, UserForm, VendorForm
+from . import ratelimit
+from .models import Cart, Category, Product
+
 User = get_user_model()
 
 def register_customer(request):
@@ -141,32 +145,45 @@ def home(request):
     })
 
 
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User as DjangoUser  # fallback if you're using default User
 
 def login_view(request):
     if request.method == 'POST':
-        identifier = request.POST.get('username')  # can be username or email
+        identifier = (request.POST.get('username') or '').strip()  # username or email
         password = request.POST.get('password')
+
+        if ratelimit.is_locked(request, identifier):
+            messages.error(
+                request,
+                "Too many failed login attempts. Please wait 15 minutes and try again.",
+            )
+            return render(request, 'auth/login.html', status=429)
+
+        # Remember the guest session before login() rotates the session key,
+        # so the guest's cart can be merged into the user's cart.
+        guest_session_key = request.session.session_key
 
         # Try authenticating by username first
         user = authenticate(request, username=identifier, password=password)
 
         # If not found, try treating identifier as email
-        if user is None:
-            try:
-                user_obj = User.objects.get(email__iexact=identifier)
+        if user is None and identifier:
+            user_obj = User.objects.filter(email__iexact=identifier).first()
+            if user_obj:
                 user = authenticate(request, username=user_obj.username, password=password)
-            except User.DoesNotExist:
-                user = None
+
+        if user is None:
+            ratelimit.register_failure(request, identifier)
 
         if user is not None:
             if user.is_active:
+                ratelimit.reset(request, identifier)
                 login(request, user)
 
                 # --- Cart Merging Logic ---
-                session_key = request.session.session_key or request.session.create()
-                guest_cart = Cart.objects.filter(session_key=session_key, user=None).first()
+                guest_cart = (
+                    Cart.objects.filter(session_key=guest_session_key, user=None).first()
+                    if guest_session_key else None
+                )
                 user_cart = Cart.for_user(user)
                 if guest_cart and guest_cart != user_cart:
                     user_cart.merge_with(guest_cart)
@@ -202,12 +219,6 @@ def logout_view(request):
     auth_logout(request)
     messages.info(request, "You have been logged out.")
     return redirect('login')
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.views import PasswordChangeView
-from django.urls import reverse_lazy
-from .forms import ProfileForm
 
 @login_required
 def edit_profile(request):
@@ -222,8 +233,6 @@ def edit_profile(request):
 
     return render(request, 'auth/edit_profile.html', {'form': form})
 
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
 
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'auth/change_password.html'

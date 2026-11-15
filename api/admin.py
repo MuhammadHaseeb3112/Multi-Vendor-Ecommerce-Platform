@@ -1,6 +1,22 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import *
+
+from .models import (
+    Category,
+    Coupon,
+    CustomUser,
+    Order,
+    OrderItem,
+    Payment,
+    Product,
+    ProductColorVariant,
+    ProductQuestion,
+    ProductSizeVariant,
+    Review,
+    Vendor,
+    Withdrawal,
+    timezone,
+)
 
 admin.site.register(Category)
 class OrderItemInline(admin.TabularInline):

@@ -1,23 +1,32 @@
-from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import get_object_or_404, render,redirect
-from django.contrib.admin.views.decorators import staff_member_required
-from api.models import *
-from django.core.paginator import Paginator
-from django.db.models import Q
-from .models import Product, Vendor
-from django.shortcuts import redirect, get_object_or_404
-from django.contrib.admin.views.decorators import staff_member_required
-from .models import Product
-from .forms import *
-from django.contrib import messages
-from django.core.paginator import Paginator
-from django.db.models import Q
-from django.http import HttpResponse
 import csv
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.utils.dateparse import parse_date
+from django.utils.timezone import now
+from django.views.decorators.http import require_POST
 from reportlab.pdfgen import canvas
-from django.shortcuts import render
-from .models import Withdrawal
+
+from .forms import CouponForm, ProductForm, VendorBankForm
+from .models import (  # adjust if needed
+    Coupon,
+    CustomUser,
+    Order,
+    OrderItem,
+    Product,
+    Vendor,
+    Withdrawal,
+    settings,
+)
+
+
 def is_admin(user):
     return user.is_superuser
 
@@ -100,11 +109,6 @@ def admin_edit_product(request, pk):
 
 
 
-from django.core.paginator import Paginator
-from django.db.models import Q
-from django.http import HttpResponse
-from django.shortcuts import render
-import csv
 
 
 
@@ -146,11 +150,6 @@ def admin_manage_orders(request):
         'status_filter': status_filter,
     }
     return render(request, 'admin/manage_orders.html', context)
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from django.utils import timezone
-from .models import Order, OrderItem  # adjust if needed
 
 # Only allow admin/staff users
 @user_passes_test(lambda u: u.is_staff)
@@ -215,8 +214,6 @@ def admin_order_detail(request, order_id):
 def admin_vendor_withdrawals(request):
     withdrawals = Withdrawal.objects.select_related('vendor__user').all()
     return render(request, 'admin/admin_vendor_withdrawals.html', {'withdrawals': withdrawals})
-from django.shortcuts import get_object_or_404, redirect, render
-from .models import Withdrawal
 
 @user_passes_test(is_admin)
 def edit_withdrawal_view(request, pk):
@@ -245,9 +242,6 @@ def delete_withdrawal_view(request, pk):
     messages.success(request, 'Withdrawal request deleted successfully.')
     return redirect('admin_vendor_withdrawals')
 
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.timezone import now
 
 @user_passes_test(is_admin)
 @require_POST
@@ -348,7 +342,6 @@ def export_withdrawals_pdf(request):
     p.showPage()
     p.save()
     return response
-from django.core.mail import send_mail
 @user_passes_test(is_admin)
 def admin_vendor_payment_list(request):
     vendors = Vendor.objects.all()
@@ -409,8 +402,6 @@ def create_coupon(request):
     return render(request, 'admin/admin_coupon_create.html', {
         'form': form,
     })
-from django.db.models import Q
-from django.utils.dateparse import parse_date
 @user_passes_test(is_admin)
 def admin_coupon_list(request):
     coupons = Coupon.objects.all().order_by('-created_at')
@@ -466,8 +457,6 @@ def admin_coupon_delete(request, coupon_id):
     coupon.delete()
     messages.success(request, 'Coupon deleted successfully.')
     return redirect('admin_coupon_list')
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
 @user_passes_test(is_admin)
 @require_POST
 def toggle_coupon_status(request):

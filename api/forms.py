@@ -1,9 +1,21 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Row, Column
+from crispy_forms.layout import Submit
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from .models import *
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+from PIL import Image
+
+from .models import (
+    ContactMessage,
+    Coupon,
+    CustomUser,
+    Product,
+    ProductColorVariant,
+    ProductSizeVariant,
+    Review,
+    Vendor,
+)
+
 User = get_user_model()
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -34,6 +46,19 @@ class VendorForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.label_class = 'fw-bold'
         self.helper.add_input(Submit('submit', 'Complete Registration'))
+class AdminVendorForm(VendorForm):
+    """Vendor form for the admin panel: the admin picks which user owns the store."""
+
+    class Meta(VendorForm.Meta):
+        exclude = ['created_at', 'is_payment_info_verified']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['user'].queryset = get_user_model().objects.filter(vendor__isnull=True)
+        self.helper.inputs = []
+        self.helper.add_input(Submit('submit', 'Save Vendor'))
+
+
 class BuyerSignUpForm(UserCreationForm):
     class Meta:
         model = CustomUser
@@ -69,8 +94,6 @@ class SellerSignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
-from django import forms
-from .models import Review
 
 class ReviewForm(forms.ModelForm):
     class Meta:
@@ -80,8 +103,6 @@ class ReviewForm(forms.ModelForm):
             'rating': forms.NumberInput(attrs={'min': 1, 'max': 5, 'class': 'form-control'}),
             'comment': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
-from django import forms
-from .models import ContactMessage
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -90,9 +111,6 @@ class ContactForm(forms.ModelForm):
         widgets = {
             'message': forms.Textarea(attrs={'rows': 5}),
         }
-from django import forms
-from .models import CustomUser
-from PIL import Image
 
 class ProfileForm(forms.ModelForm):
     class Meta:
@@ -115,8 +133,6 @@ class ProfileForm(forms.ModelForm):
         if commit:
             user.save()
         return user
-from django import forms
-from .models import Product, ProductColorVariant, ProductSizeVariant
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -168,10 +184,6 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'phone', 'address', 'profile_image', 'is_customer', 'is_active']
-from django import forms
-from .models import Coupon
-from django.contrib.admin.widgets import AdminDateWidget
-from django.forms.widgets import SelectDateWidget
 
 class CouponForm(forms.ModelForm):
     class Meta:

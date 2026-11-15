@@ -1,30 +1,44 @@
-from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 
-from django.contrib.auth.views import LoginView, LogoutView
-from . import  testcart, views,history, receipt,authviews, widthrawviews,vendorviews,adminviews, productsviews, cartviews, checkoutviews, contactviews, shopviews, userdashviews, paymentviews, vendashviews
-from .productsviews import ProductListView, ProductDetailView, add_review, ajax_filter_products, add_to_cart, search_products
-from .authviews import edit_profile, CustomPasswordChangeView
+from . import (
+    adminviews,
+    authviews,
+    cartviews,
+    checkoutviews,
+    contactviews,
+    history,
+    paymentviews,
+    productsviews,
+    receipt,
+    shopviews,
+    userdashviews,
+    vendashviews,
+    vendorviews,
+    views,
+    withdrawviews,
+)
+from .authviews import CustomPasswordChangeView, edit_profile
+from .productsviews import (
+    ProductDetailView,
+    ProductListView,
+    add_review,
+    ajax_filter_products,
+    search_products,
+)
 
 urlpatterns = [
     # -------------------- Authentication --------------------
     path('login/', authviews.login_view, name='login'),
     path('register/', authviews.register_customer, name='register_customer'),
-    path('vendor/register', authviews.register_vendor, name='register_vendor'),
+    path('vendor/register/', authviews.register_vendor, name='register_vendor'),
     path('logout/', authviews.logout_view, name='logout'),
     path('activate/<uidb64>/<token>/', authviews.activate_account, name='activate'),
-
-    # -------------------- Vendor Authentication --------------------
-    path('vendor/register/', vendorviews.register_vendor, name='register_seller'),
 
     # -------------------- Vendor Dashboard --------------------
     path('vendor/dashboard/', vendashviews.vendor_dashboard, name='vendor_dashboard'),
     path('vendor/payments/', vendashviews.payment_history, name='vendor_payment_history'),
     path('vendor/edit-profile/', vendashviews.edit_vendor_profile, name='edit_vendor_profile'),
     path('vendor/earnings/', vendashviews.vendor_earnings, name='vendor_earnings'),
-    path('vendor/<int:vendor_id>/', vendorviews.vendor_detail, name='vendor_detail'),
     # -------------------- Vendor Product Management --------------------
     path('vendor/products/', vendashviews.product_dashboard, name='product_dashboard'),
     path('vendor/products/add/', vendashviews.add_product, name='add_product'),
@@ -46,14 +60,12 @@ urlpatterns = [
     path('vendor/orders/<int:order_id>/', vendashviews.vendor_order_detail, name='vendor_order_detail'),
     path('vendor/order-history/', vendashviews.order_history, name='vendor_order_history'),
     path('vendor/payment-details/', vendashviews.vendor_payment_details, name='vendor_payment_details'),
-    path('vendor/<slug:vendor_slug>/', views.vendor_detail, name='vendor_detail'),
 
     # -------------------- Products --------------------
     path('search/', search_products, name='search_products'),
     path('product/', ProductListView.as_view(), name='product_list'),
     path('products/quick-view/<int:product_id>/', productsviews.quick_view, name='quick_view'),
     path('category/<slug:slug>/', views.category_products, name='category_products'),
-    path('category/quick-view/<int:pk>/', views.product_quick_view, name='product_quick_view'),
     path('ajax/filter-products/', ajax_filter_products, name='ajax_filter_products'),
     path('product/category/<slug:slug>/', ProductListView.as_view(), name='product_list_by_category'),
     path('product/<slug:slug>/', ProductDetailView.as_view(), name='product_detail'),
@@ -61,12 +73,7 @@ urlpatterns = [
 
     # -------------------- Cart --------------------
     path('cart/', cartviews.cart_view, name='cart_view'),
-    path('cart/add/', testcart.add_to_cart, name='add_to_cart'),
     path('cart/add/', cartviews.add_to_cart, name='add_to_cart'),
-    path('cart/add/<int:product_id>/', cartviews.add_to_cart, name='add_to_cart'),
-    path('cart/apply-coupon/', cartviews.apply_coupon, name='apply_coupon'),
-    path('ajax/update-cart/', views.update_cart_ajax, name='update_cart_ajax'),
-    path('cart', cartviews.cart_view, name='cart_view'),
     path('cart/add/<int:product_id>/', cartviews.add_to_cart, name='add_to_cart'),
     path('cart/update/<int:item_id>/', cartviews.update_cart_item, name='update_cart_item'),
     path('cart/remove/<int:item_id>/', cartviews.remove_cart_item, name='remove_cart_item'),
@@ -82,7 +89,6 @@ urlpatterns = [
     path('shop/', shopviews.shop_view, name='shop'),
     path('contact/', contactviews.contact_view, name='contact'),
     path('about/', views.about_us, name='about_us'),
-    path('submit-question/', views.submit_question, name='submit_question'),
     path('ask-question/', views.ask_question, name='ask_question'),
 
     # -------------------- Track Orders --------------------
@@ -142,7 +148,7 @@ urlpatterns = [
     path('admin-panel/coupons', adminviews.admin_coupon_list, name='admin_coupon_list'),
     path('admin-panel/coupons/edit/<int:coupon_id>/', adminviews.admin_coupon_edit, name='admin-coupon-edit'),
     path('admin-panel/coupons/delete/<int:coupon_id>/', adminviews.admin_coupon_delete, name='admin-coupon-delete'),
-    path('admin/coupons/toggle-status/', adminviews.toggle_coupon_status, name='admin-coupon-toggle-status'),
+    path('admin-panel/coupons/toggle-status/', adminviews.toggle_coupon_status, name='admin-coupon-toggle-status'),
 
     #-------------Admin-Withdraw-----------------------------
     path('admin-panel/withdrawals/', adminviews.admin_vendor_withdrawals, name='admin_vendor_withdrawals'),
@@ -152,11 +158,11 @@ urlpatterns = [
     path('admin-panel/withdrawals/reject/<int:pk>/', adminviews.reject_withdrawal_view, name='admin_reject_withdrawal'),
     path('admin-panel/withdrawals/export/csv/', adminviews.export_withdrawals_csv, name='export_withdrawals_csv'),
     path('admin-panel/withdrawals/export/pdf/', adminviews.export_withdrawals_pdf, name='export_withdrawals_pdf'),
-    path('admin-panel/vendor-withdrawal-methods/', widthrawviews.vendor_withdrawal_preferences, name='vendor_withdrawal_preferences'),
-    path('admin-panel/vendor-withdrawal-methods/<int:vendor_id>/approve/', widthrawviews.approve_vendor_payment_info, name='approve_vendor_payment_info'),
-    path('admin-panel/vendor-withdrawal-methods/<int:vendor_id>/reject/', widthrawviews.reject_vendor_payment_info, name='reject_vendor_payment_info'),
-    path('admin-panel/vendor-withdrawal-methods/<int:vendor_id>/edit/',widthrawviews.edit_vendor_bank_details, name='edit_vendor_bank_details'),
-    path('admin-panel/vendor-withdrawal-methods/<int:vendor_id>/delete/', widthrawviews.delete_vendor_bank_details, name='delete_vendor_bank_details'),
+    path('admin-panel/vendor-withdrawal-methods/', withdrawviews.vendor_withdrawal_preferences, name='vendor_withdrawal_preferences'),
+    path('admin-panel/vendor-withdrawal-methods/<int:vendor_id>/approve/', withdrawviews.approve_vendor_payment_info, name='approve_vendor_payment_info'),
+    path('admin-panel/vendor-withdrawal-methods/<int:vendor_id>/reject/', withdrawviews.reject_vendor_payment_info, name='reject_vendor_payment_info'),
+    path('admin-panel/vendor-withdrawal-methods/<int:vendor_id>/edit/',withdrawviews.edit_vendor_bank_details, name='edit_vendor_bank_details'),
+    path('admin-panel/vendor-withdrawal-methods/<int:vendor_id>/delete/', withdrawviews.delete_vendor_bank_details, name='delete_vendor_bank_details'),
     #--------------------Admin---Vendors----------------------------------------------------
     path('admin-panel/vendors/', vendorviews.vendor_list, name='vendor_list'),
     path('admin-panel/vendors/create/', vendorviews.vendor_create, name='vendor_create'),
@@ -167,7 +173,7 @@ urlpatterns = [
     path('admin-panel/customers/add/', views.customer_create, name='customer_create'),
     path('admin-panel/customers/<int:pk>/edit/', views.customer_edit, name='customer_edit'),
     path('admin-panel/customers/<int:pk>/delete/', views.customer_delete, name='customer_delete'),
-]
 
-# -------------------- Static Media --------------------
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # -------------------- Public vendor store (keep last: catch-all slug) --------------------
+    path('vendor/<slug:vendor_slug>/', views.vendor_detail, name='vendor_detail'),
+]

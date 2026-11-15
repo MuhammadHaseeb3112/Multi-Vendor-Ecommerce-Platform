@@ -1,13 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from .models import Cart, CartItem, Product, ProductColorVariant, ProductSizeVariant, Coupon
-from decimal import Decimal
-import json
-from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from .models import Coupon, Cart
+
+from .models import Cart, CartItem, Coupon, Product
+
 
 def cart_view(request):
     cart = Cart.get_or_create_cart(request)
@@ -25,25 +22,37 @@ def cart_view(request):
     return render(request, 'purchase/cart.html', context)
 
 
-def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    color_id = request.POST.get('color')
-    size_id = request.POST.get('size')
-    quantity = int(request.POST.get('quantity', 1))
+@require_POST
+def add_to_cart(request, product_id=None):
+    """Add a product (optionally with colour/size) to the current cart.
 
-    color = ProductColorVariant.objects.filter(id=color_id).first() if color_id else None
-    size = ProductSizeVariant.objects.filter(id=size_id).first() if size_id else None
+    Works for both `/cart/add/` (product_id in the form) and
+    `/cart/add/<product_id>/`, for guests and signed-in users.
+    """
+    product_id = product_id or request.POST.get('product_id')
+    product = get_object_or_404(Product, id=product_id, is_available=True)
 
-    cart = Cart.get_or_create_cart(request)
+    try:
+        quantity = max(int(request.POST.get('quantity', 1)), 1)
+    except (TypeError, ValueError):
+        quantity = 1
+
+    color_id = request.POST.get('color_id') or request.POST.get('color')
+    size_id = request.POST.get('size_id') or request.POST.get('size')
+    color = product.color_variants.filter(id=color_id).first() if color_id else None
+    size = product.size_variants.filter(id=size_id).first() if size_id else None
+
+    cart = request.cart
     item, created = CartItem.objects.get_or_create(
         cart=cart, product=product, color=color, size=size,
-        defaults={'quantity': quantity}
+        defaults={'quantity': quantity},
     )
     if not created:
         item.quantity += quantity
-        item.save()
+        item.save(update_fields=['quantity'])
 
     cart.update_totals()
+    messages.success(request, f"{product.name} added to cart.")
     return redirect('cart_view')
 
 
@@ -97,7 +106,7 @@ def apply_coupon(request):
             messages.error(request, "Invalid coupon code.")
     return redirect('cart_view')
 def remove_coupon(request):
-    cart = Cart.for_user(request.user)
+    cart = request.cart  # works for guests too (set by CartMiddleware)
     if cart.coupon:
         cart.coupon = None
         cart.save()

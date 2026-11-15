@@ -1,9 +1,12 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponseForbidden
-from .models import Payment, Order
-from django.views.decorators.http import require_POST
 from datetime import datetime
+
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+
+from .models import Payment
+
 
 @login_required
 def payment_history(request):

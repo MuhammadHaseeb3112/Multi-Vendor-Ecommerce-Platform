@@ -1,8 +1,12 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .models import Cart, CartItem, Order, ProductColorVariant, ProductSizeVariant
 from .tracking import find_trackable_order
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import *
+
 
 @login_required
 def customer_dashboard(request):
@@ -20,8 +24,6 @@ def customer_dashboard(request):
     }
 
     return render(request, 'customers/customer_dashboard.html', context)
-from django.shortcuts import render, get_object_or_404
-from .models import Order
 
 @login_required
 def order_detail(request, order_id):
@@ -32,10 +34,6 @@ login_required
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'customers/my_orders.html', {'orders': orders})
-from django.shortcuts import get_object_or_404
-from .models import ProductColorVariant, ProductSizeVariant
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages 
 @login_required
 def reorder_view(request, order_id):
     # Fetch the original order for the logged-in user
@@ -79,8 +77,6 @@ def track_order_view(request):
         order = find_trackable_order(request)
 
     return render(request, 'customers/track_order.html', {'order': order, 'searched': searched})
-from django.core.paginator import Paginator
-from django.db.models import Q
 
 
 @login_required
@@ -101,4 +97,3 @@ def order_history(request):
         'orders': page_obj,
         'query': query
     })
-  

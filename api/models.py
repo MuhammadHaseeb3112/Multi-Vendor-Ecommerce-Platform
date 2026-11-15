@@ -1,9 +1,21 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser
+from datetime import timedelta
+from decimal import Decimal
+
+# -------------------- Cart --------------------
 from django.conf import settings
-from django.utils.text import slugify
+from django.contrib.auth.models import AbstractUser
 
 # -------------------- Custom User Model --------------------
+from django.core.validators import FileExtensionValidator
+
+# -------------------- Order & Payment --------------------
+from django.db import models
+from django.utils import timezone
+from django.utils.text import slugify
+
+# Vendor documents: only PDFs and images (blocks .html/.svg/.exe uploads).
+DOCUMENT_VALIDATOR = FileExtensionValidator(['pdf', 'jpg', 'jpeg', 'png'])
+
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True)
@@ -45,9 +57,9 @@ class Vendor(models.Model):
     swift_code = models.CharField(max_length=100)
     total_earnings = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     available_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    business_license = models.FileField(upload_to='vendor/licenses/')
-    tax_certificate = models.FileField(upload_to='vendor/tax_docs/', blank=True, null=True)
-    id_proof = models.FileField(upload_to='vendor/id_proof/')
+    business_license = models.FileField(upload_to='vendor/licenses/', validators=[DOCUMENT_VALIDATOR])
+    tax_certificate = models.FileField(upload_to='vendor/tax_docs/', blank=True, null=True, validators=[DOCUMENT_VALIDATOR])
+    id_proof = models.FileField(upload_to='vendor/id_proof/', validators=[DOCUMENT_VALIDATOR])
     logo = models.ImageField(upload_to='vendor/logos/', blank=True, null=True)
 
     website = models.URLField(blank=True, null=True)
@@ -184,10 +196,6 @@ class Review(models.Model):
         return f'{self.user.username} - {self.product.name}'
 
 
-# -------------------- Cart --------------------
-from django.conf import settings
-from django.db import models
-from decimal import Decimal
 
 class Coupon(models.Model):
     DISCOUNT_TYPE_CHOICES = (
@@ -338,10 +346,6 @@ class CartItem(models.Model):
         color_price = self.color.price if self.color else Decimal(0)
         size_price = self.size.price if self.size else Decimal(0)
         return (base_price + color_price + size_price) * self.quantity
-# -------------------- Order & Payment --------------------
-from django.db import models
-from django.utils import timezone
-from datetime import timedelta
 
 def default_estimated_delivery():
     return timezone.now().date() + timedelta(days=2)

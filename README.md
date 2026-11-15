@@ -107,7 +107,7 @@ along with secure authentication, order management, payment handling, coupon man
 
 - Complete Checkout System
 - Billing Information Validation
-- Card Validation
+- Card Validation (demo checkout: no real payment gateway is charged)
 - Visa & MasterCard Support
 - Payment Records
 - Secure Order Creation
@@ -247,6 +247,10 @@ MarketHub/
 │   ├── checkoutviews.py
 │   ├── contactviews.py
 │   ├── paymentviews.py
+│   ├── ratelimit.py
+│   ├── tracking.py
+│   ├── withdrawviews.py
+│   ├── tests.py
 │   ├── productsviews.py
 │   ├── shopviews.py
 │   ├── userdashviews.py
@@ -269,6 +273,7 @@ MarketHub/
 │   └── includes/
 │
 ├── docker/entrypoint.sh
+├── docs/screenshots/
 ├── media/
 ├── static/
 ├── Dockerfile
@@ -318,6 +323,8 @@ MarketHub/
 - Destructive actions (deletes, approvals) accept POST only
 - Order tracking requires Order ID + order email
 - Atomic checkout and race-safe stock updates
+- Login rate limiting: 5 failed attempts lock the form for 15 minutes
+- Vendor documents restricted to PDF / JPG / PNG uploads
 - Secrets loaded from environment variables (`.env`, never committed)
 - Session Based Cart
 
@@ -325,29 +332,25 @@ MarketHub/
 
 # 📷 Screenshots
 
-Add screenshots here after deployment.
+| Home | Shop |
+|---|---|
+| ![Home](docs/screenshots/home.jpg) | ![Shop](docs/screenshots/shop.jpg) |
 
-```
-Home Page
+| Product Details | Vendor Store |
+|---|---|
+| ![Product details](docs/screenshots/product-detail.jpg) | ![Vendor store](docs/screenshots/vendor-store.jpg) |
 
-Customer Dashboard
+| Customer Dashboard | Order Tracking |
+|---|---|
+| ![Customer dashboard](docs/screenshots/customer-dashboard.jpg) | ![Track order](docs/screenshots/track-order.jpg) |
 
-Vendor Dashboard
+| Vendor Dashboard | Admin Dashboard |
+|---|---|
+| ![Vendor dashboard](docs/screenshots/vendor-dashboard.jpg) | ![Admin dashboard](docs/screenshots/admin-dashboard.jpg) |
 
-Admin Dashboard
-
-Product Details
-
-Shopping Cart
-
-Checkout
-
-Order Tracking
-
-Vendor Earnings
-
-Admin Orders
-```
+| Admin: Products | Admin: Coupons |
+|---|---|
+| ![Admin products](docs/screenshots/admin-products.jpg) | ![Admin coupons](docs/screenshots/admin-coupons.jpg) |
 
 ---
 

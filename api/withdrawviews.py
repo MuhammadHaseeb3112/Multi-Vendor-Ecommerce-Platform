@@ -1,11 +1,14 @@
-from django.views.decorators.http import require_POST
-# withdrawviews.py
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
-from .models import Vendor
+
+# withdrawviews.py
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+
 from .forms import VendorBankForm
+from .models import Vendor
+
 
 def is_admin(user):
     return user.is_staff or user.is_superuser

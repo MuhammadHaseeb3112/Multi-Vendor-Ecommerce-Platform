@@ -118,7 +118,7 @@
           <form method="post" style="display: inline;">
             {% csrf_token %}
             <input type="hidden" name="action" value="mark_processing">
-            <button class="btn btn-outline-warning btn-sm" {% if order.status !='Pending' %}disabled{% endif %}>
+            <button class="btn btn-outline-warning btn-sm" {% if order.status != 'Pending' %}disabled{% endif %}>
               Mark as Processing
             </button>
           </form>
@@ -127,7 +127,7 @@
           <form method="post" style="display:inline;">
             {% csrf_token %}
             <input type="hidden" name="action" value="mark_shipped">
-            <button class="btn btn-outline-primary btn-sm" {% if order.status !='Processing' %}disabled{% endif %}>
+            <button class="btn btn-outline-primary btn-sm" {% if order.status != 'Processing' %}disabled{% endif %}>
               Mark as Shipped
             </button>
           </form>
@@ -136,7 +136,7 @@
           <form method="post" style="display:inline;">
             {% csrf_token %}
             <input type="hidden" name="action" value="mark_delivered">
-            <button class="btn btn-outline-success btn-sm" {% if order.status !='Shipped' %}disabled{% endif %}>
+            <button class="btn btn-outline-success btn-sm" {% if order.status != 'Shipped' %}disabled{% endif %}>
               Mark as Delivered
             </button>
           </form>

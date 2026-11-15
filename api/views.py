@@ -1,18 +1,26 @@
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.views.decorators.http import require_POST
-from .tracking import find_trackable_order
-from django.shortcuts import render, get_object_or_404
-from .models import Product, Category
-from django.http import JsonResponse, Http404
 import random
-from .forms import *
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.mail import send_mail
+from django.core.paginator import Paginator
+from django.db.models import Count, Q
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+
+from .forms import CustomerForm
+from .models import Category, CustomUser, Product, ProductQuestion, Vendor
+from .tracking import find_trackable_order
+
+
 def chunk_list(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
 
 def home(request):
     top_vendors = Vendor.objects.annotate(
-        product_count=models.Count('products')
+        product_count=Count('products')
     ).order_by('-product_count')[:4]
     # Works on a fresh database too: missing categories just give empty sections.
     available = Product.objects.filter(is_available=True).select_related('category', 'vendor')
@@ -80,90 +88,11 @@ def home(request):
         'top_vendors': top_vendors,
 
     })
-def category_products(request, slug):
-    category = get_object_or_404(Category, slug=slug)
-    products = Product.objects.filter(category=category, is_available=True)
-
-    badge_options = {
-        'New': 'bg-primary',
-        'Popular': 'bg-success',
-        'Hot': 'bg-danger',
-        'Trending': 'bg-warning text-dark',
-        'Top': 'bg-dark'
-    }
-
-    for product in products:
-        badge_label = random.choice(list(badge_options.keys()))
-        product.badge = badge_label
-        product.badge_color = badge_options[badge_label]
-
-    return render(request, 'products/category_products.html', {
-        'category': category,
-        'products': products,
-    })
     
-def product_quick_view(request, pk):
-    try:
-        product = Product.objects.select_related('category', 'vendor', 'created_by').get(pk=pk)
-        return JsonResponse({
-            'name': product.name,
-            'brand': product.brand,
-            'category': product.category.name,
-            'description': product.description or '',
-            'base_price': str(product.base_price),
-            'image': product.image.url if product.image else '',
-            'rating': product.average_rating,
-        })
-    except Product.DoesNotExist:
-        raise Http404("Product not found")  
 def about_us(request):
     return render(request, 'about_us.html')
-from django.shortcuts import redirect
-from django.contrib import messages
-from .models import Product, ProductQuestion
 
-def submit_question(request):
-    if request.method == 'POST':
-        product_id = request.POST.get('product')
-        email = request.POST.get('email')
-        question_text = request.POST.get('question')
 
-        try:
-            product = Product.objects.get(id=product_id)
-            ProductQuestion.objects.create(
-                product=product,
-                email=email,
-                question=question_text
-            )
-            messages.success(request, "Your question has been submitted successfully.")
-        except Product.DoesNotExist:
-            messages.error(request, "Product not found.")
-
-    return redirect(request.META.get('HTTP_REFERER', '/'))
-from django.core.mail import send_mail
-from django.shortcuts import redirect
-from django.views.decorators.csrf import csrf_protect
-
-@csrf_protect
-def ask_question(request):
-    if request.method == "POST":
-        product_name = request.POST.get("product_name")
-        email = request.POST.get("email")
-        question = request.POST.get("question")
-
-        # Send email or store in DB
-        send_mail(
-            f"Product Inquiry: {product_name}",
-            f"From: {email}\n\nQuestion:\n{question}",
-            "mhasseb3112@gmail.com",  # Your email
-            ["mhasseb3112@gmail.com"],  # Support email
-        )
-        return redirect("product_detail") 
-    from django.shortcuts import redirect, get_object_or_404
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.conf import settings
-from .models import Product, ProductQuestion
 
 def ask_question(request):
     if request.method == 'POST':
@@ -194,8 +123,6 @@ def ask_question(request):
 
     messages.error(request, "Invalid request.")
     return redirect('/')
-from django.shortcuts import render
-from .models import Order
 def track_order_view(request):
     order = None
     searched = False
@@ -215,12 +142,6 @@ def vendor_track_order_view(request):
         order = find_trackable_order(request)
 
     return render(request, 'vendor/track_order.html', {'order': order, 'searched': searched})
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import CustomUser
-from .forms import CustomerForm
-from django.contrib import messages
-from django.core.paginator import Paginator
-from django.db.models import Q
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
@@ -266,46 +187,7 @@ def customer_delete(request, pk):
     customer.delete()
     messages.success(request, "Customer deleted successfully.")
     return redirect('customer_list')
-from django.http import JsonResponse
-from django.template.loader import render_to_string
-from django.views.decorators.csrf import csrf_exempt
-import json
-from .models import Cart, CartItem, Product  # Adjust import as needed
 
-def update_cart_ajax(request):
-    if request.method == 'POST' and request.user.is_authenticated:
-        data = json.loads(request.body)
-        item_id = data.get('id')
-        action = data.get('action')
-
-        try:
-            cart = Cart.for_user(request.user)
-            cart_item = CartItem.objects.get(id=item_id, cart=cart)
-        except (Cart.DoesNotExist, CartItem.DoesNotExist):
-            return JsonResponse({'error': 'Cart item not found'}, status=404)
-
-        if action == 'increase':
-            cart_item.quantity += 1
-            cart_item.save()
-        elif action == 'decrease':
-            if cart_item.quantity > 1:
-                cart_item.quantity -= 1
-                cart_item.save()
-            else:
-                cart_item.delete()
-        elif action == 'remove':
-            cart_item.delete()
-
-        # Refresh cart data
-        cart.refresh_from_db()
-        cart_html = render_to_string('cart/ajax_cart_items.html', {'cart': cart})
-
-        return JsonResponse({
-            'cart_html': cart_html,
-            'total_items': cart.total_items  # You must define this method/property
-        })
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
 def category_products(request, slug):
     category = get_object_or_404(Category, slug=slug)
     products = Product.objects.filter(category=category, is_available=True)

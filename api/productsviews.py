@@ -1,11 +1,18 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView
-from .models import *
-from .forms import ReviewForm
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Avg
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.views.decorators.http import require_POST
+from django.views.generic import DetailView, ListView
+
+from .forms import ReviewForm
+from .models import Category, Product, ProductColorVariant, Review
+
+
 class ProductListView(ListView):
     model = Product
     template_name = 'products/products_list.html'
@@ -18,7 +25,7 @@ class ProductListView(ListView):
         Otherwise, return all available products.
         """
         category_slug = self.kwargs.get('slug')
-        queryset = Product.objects.filter(is_available=True)
+        queryset = Product.objects.filter(is_available=True).order_by('-id')
 
         if category_slug:
             category = get_object_or_404(Category, slug=category_slug)
@@ -42,7 +49,6 @@ class ProductListView(ListView):
         context['colors'] = ProductColorVariant.objects.all()
 
         return context
-from django.db.models import Avg
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'products/product_detail.html'
@@ -76,7 +82,6 @@ class ProductDetailView(DetailView):
             'related_products': Product.objects.filter(category=product.category).exclude(id=product.id)[:3],
         })
         return context
-from django.views.decorators.http import require_GET, require_POST
 @require_POST
 @login_required
 def add_review(request, slug):
@@ -127,19 +132,7 @@ def ajax_filter_products(request):
 
     html = render_to_string('products/product_list_ajax.html', {'products': products})
     return JsonResponse({'html': html})
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
 
-@csrf_exempt
-def add_to_cart(request):
-    if request.method == "POST" and request.user.is_authenticated:
-        data = json.loads(request.body)
-        product_id = data.get("product_id")
-        quantity = int(data.get("quantity", 1))
-        # Add to cart logic here (e.g., Cart.objects.create(...))
-        return JsonResponse({"success": True})
-    return JsonResponse({"success": False, "message": "Unauthorized or invalid request"})
 def quick_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     return render(request, 'partials/quick_view_modal.html', {'product': product})

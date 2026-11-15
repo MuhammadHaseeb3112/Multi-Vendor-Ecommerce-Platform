@@ -1,8 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Order
-from .models import Vendor
-from .models import OrderItem
+
+from .models import Order, OrderItem
+
 
 @receiver(post_save, sender=Order)
 def update_vendor_earnings(sender, instance, **kwargs):

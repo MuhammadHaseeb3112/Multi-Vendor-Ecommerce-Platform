@@ -1,16 +1,16 @@
-from django.shortcuts import render, redirect, get_object_or_404
+import datetime
+import logging
+import re
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.conf import settings
-from .models import *
 from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 
-import logging
-
-import datetime
-import re
+from .models import Cart, Order, OrderItem, Payment
 
 logger = logging.getLogger(__name__)
 

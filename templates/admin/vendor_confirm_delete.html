@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Delete Vendor{% endblock %}
 
 {% block content %}
@@ -72,6 +73,7 @@
              
           {% if request.user.last_login %}
   <p class="text-muted">Last Login: {{ request.user.last_login|date:"D, d M Y H:i" }}</p>
+          {% endif %}
         </div>
         <hr>
         {% include 'includes/sidebar_admin.html' %}

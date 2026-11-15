@@ -160,7 +160,7 @@ class PublicPagesTests(TestCase):
 
 class DuplicateCartTests(BaseTestCase):
     def test_duplicate_carts_are_merged(self):
-        a = Cart.objects.create(user=self.customer)
+        Cart.objects.create(user=self.customer)
         b = Cart.objects.create(user=self.customer)
         b.items.create(product=self.product, quantity=1)
         Cart.objects.create(user=self.customer)
@@ -168,3 +168,62 @@ class DuplicateCartTests(BaseTestCase):
         self.assertEqual(self.client.get("/").status_code, 200)
         self.assertEqual(Cart.objects.filter(user=self.customer).count(), 1)
         self.assertEqual(Cart.for_user(self.customer).items.count(), 1)
+
+
+class GuestCartTests(TestCase):
+    def test_guest_can_remove_coupon(self):
+        self.client.get("/")
+        resp = self.client.get(reverse("remove_coupon"))
+        self.assertEqual(resp.status_code, 302)
+
+
+class LoginRateLimitTests(BaseTestCase):
+    def setUp(self):
+        from django.core.cache import cache
+        cache.clear()
+
+    def test_locks_after_repeated_failures(self):
+        for _ in range(5):
+            self.client.post(reverse("login"), {"username": "alice", "password": "wrong"})
+        resp = self.client.post(reverse("login"), {"username": "alice", "password": "pass12345"})
+        self.assertEqual(resp.status_code, 429)
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_successful_login_works(self):
+        resp = self.client.post(reverse("login"), {"username": "alice", "password": "pass12345"})
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn("_auth_user_id", self.client.session)
+
+    def test_login_by_email(self):
+        self.client.post(reverse("login"), {"username": "ALICE@example.com", "password": "pass12345"})
+        self.assertIn("_auth_user_id", self.client.session)
+
+
+class CartFlowTests(BaseTestCase):
+    def test_guest_add_to_cart_then_login_keeps_items(self):
+        self.client.get("/")
+        self.client.post(reverse("add_to_cart"), {"product_id": self.product.id, "quantity": 2})
+        self.client.post(reverse("login"), {"username": "alice", "password": "pass12345"})
+        cart = Cart.for_user(self.customer)
+        self.assertEqual(cart.items.get().quantity, 2)
+
+    def test_add_to_cart_requires_post(self):
+        self.assertEqual(self.client.get(reverse("add_to_cart")).status_code, 405)
+
+    def test_add_to_cart_with_product_in_url(self):
+        self.client.get("/")
+        resp = self.client.post(reverse("add_to_cart", args=[self.product.id]), {"quantity": 1})
+        self.assertEqual(resp.status_code, 302)
+
+
+class RoutingTests(BaseTestCase):
+    def test_vendor_routes_not_shadowed_by_store_slug(self):
+        self.assertEqual(reverse("register_vendor"), "/vendor/register/")
+        self.client.force_login(self.vendor_user)
+        resp = self.client.get(reverse("vendor_track_order_view"))
+        self.assertEqual(resp.status_code, 200)
+
+    def test_public_pages(self):
+        for name in ["home", "shop", "about_us", "contact", "track_order", "login", "register_customer", "register_vendor"]:
+            with self.subTest(page=name):
+                self.assertEqual(self.client.get(reverse(name)).status_code, 200)

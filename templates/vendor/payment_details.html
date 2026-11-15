@@ -158,9 +158,8 @@
             <label for="preferred_payment_method" class="form-label">Preferred Payment Method</label>
             <select class="form-select" name="preferred_payment_method" required>
               <option value="">-- Select --</option>
-              <option value="Bank Transfer" {% if vendor.preferred_payment_method=="Bank Transfer" %}selected{% endif
-                %}>Bank Transfer</option>
-              <option value="PayPal" {% if vendor.preferred_payment_method=="PayPal" %}selected{% endif %}>PayPal
+              <option value="Bank Transfer" {% if vendor.preferred_payment_method == "Bank Transfer" %}selected{% endif %}>Bank Transfer</option>
+              <option value="PayPal" {% if vendor.preferred_payment_method == "PayPal" %}selected{% endif %}>PayPal
               </option>
             </select>
           </div>

@@ -1,11 +1,14 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_protect
-from django.contrib import messages
-from .models import Payment, Order, CustomUser, Vendor
-from django.core.exceptions import ObjectDoesNotExist
 import re
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.views.decorators.csrf import csrf_protect
+
+from .models import Payment
+
 
 @login_required
 def admin_payment_history(request):

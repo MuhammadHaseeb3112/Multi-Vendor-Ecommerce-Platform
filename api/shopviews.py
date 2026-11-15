@@ -1,9 +1,7 @@
-from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator
-from .models import Product, Category
-
 from django.shortcuts import render
-from .models import Product, Category
+
+from .models import Category, Product
+
 
 def shop_view(request):
     products = Product.objects.filter(is_available=True)

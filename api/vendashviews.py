@@ -1,19 +1,38 @@
-from django.views.decorators.http import require_POST
-from django.db import transaction
-from django.db.models import F
-from django.http import Http404
-# vendors/views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Vendor, Withdrawal
-from django.core.mail import send_mail
 from django.conf import settings
-from django.shortcuts import render
+from django.contrib import messages  # Optional: if you want to show messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
-from django.http import HttpResponseForbidden
-from .models import *
-from .forms import *
+from django.core.mail import send_mail
+from django.core.paginator import Paginator
+from django.db import transaction
+from django.db.models import Count, F, Q
+from django.http import Http404, HttpResponseForbidden
+
+# vendors/views.py
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.views.decorators.http import require_POST
+
+from .forms import (
+    ProductColorVariantForm,
+    ProductForm,
+    ProductSizeVariantForm,
+    ProductStockForm,
+    VendorBankForm,
+    VendorProfileForm,
+)
+from .models import (  # Update based on your actual models
+    Order,
+    OrderItem,
+    Payment,
+    Product,
+    ProductColorVariant,
+    ProductSizeVariant,
+    Vendor,
+    Withdrawal,
+    models,
+)
+
+
 @login_required
 def vendor_dashboard(request):
     try:
@@ -30,7 +49,8 @@ def vendor_dashboard(request):
     total_orders = order_items.values('order').distinct().count()
 
     # Orders by status
-    orders_by_status = order_items.values('order__status').annotate(count=Count('order__id'))
+    # distinct=True: an order with several of this vendor's items counts once
+    orders_by_status = order_items.values('order__status').annotate(count=Count('order__id', distinct=True))
 
     # Prepare status counts
     status_counts = {
@@ -57,10 +77,6 @@ def vendor_dashboard(request):
     }
 
     return render(request, 'vendor/vendor_dashboard.html', context)
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import Product, Vendor, ProductColorVariant, ProductSizeVariant
-from .forms import *
 
 @login_required
 def product_dashboard(request):
@@ -215,11 +231,6 @@ def manage_orders(request):
         'vendor_orders': vendor_orders,
         'my_orders': my_orders,
     })
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render, redirect
-from django.utils import timezone
-from django.contrib import messages  # Optional: if you want to show messages
-from .models import Order, OrderItem, Vendor, Product  # Update based on your actual models
 
 
 @login_required
@@ -286,8 +297,6 @@ def payment_history(request):
         'payments': payments,
         'latest_payment': latest_payment
     })
-from django.core.paginator import Paginator
-from django.db.models import Q
 @login_required
 def order_history(request):
     query = request.GET.get('q', '').strip()
@@ -350,7 +359,6 @@ def update_product_stock(request, product_id):
         form = ProductStockForm(instance=product)
 
     return render(request, 'vendor/update_stock.html', {'form': form, 'product': product})
-from decimal import Decimal
 @login_required
 def vendor_earnings(request):
     vendor = Vendor.objects.get(user=request.user)

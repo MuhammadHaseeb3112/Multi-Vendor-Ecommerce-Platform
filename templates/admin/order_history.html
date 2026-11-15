@@ -53,6 +53,7 @@
         <p class="small text-muted">Joined: {{ request.user.date_joined|date:"M d, Y" }}</p>
         {% if request.user.last_login %}
   <p class="text-muted">Last Login: {{ request.user.last_login|date:"D, d M Y H:i" }}</p>
+        {% endif %}
       </div>
       <hr>
       {% include 'includes/sidebar_vendor.html' %}
