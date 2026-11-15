@@ -2,12 +2,12 @@
 
 > A complete Multi-Vendor Ecommerce Platform developed using Django, enabling customers, vendors, and administrators to interact through a secure, scalable, and feature-rich online marketplace.
 
-![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
+![Python](https://img.shields.io/badge/Python-3.12-blue.svg)
 ![Django](https://img.shields.io/badge/Django-6.0-success.svg)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple.svg)
 ![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791.svg)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Tests](https://img.shields.io/badge/Tests-25%20passing-brightgreen.svg)
 
 ---
 
@@ -398,6 +398,8 @@ Leave `POSTGRES_DB` empty to use SQLite; set it to use PostgreSQL.
 ---
 
 ## Run Tests
+
+25 automated tests cover access control, order tracking, payment data handling, cart and coupon flows, stock updates and login rate limiting.
 
 ```bash
 python manage.py test api
