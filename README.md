@@ -8,6 +8,11 @@
 ![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791.svg)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)
 ![Tests](https://img.shields.io/badge/Tests-42%20passing-brightgreen.svg)
+[![Live demo](https://img.shields.io/badge/Live%20demo-mh--markethub.duckdns.org-BB2D3B.svg)](https://mh-markethub.duckdns.org/)
+
+**🌐 Live demo: [mh-markethub.duckdns.org](https://mh-markethub.duckdns.org/)** — on the login page pick **Customer**, **Vendor** or **Admin**. Customer and Vendor give you a private account (vendors get their own copy of a store to manage), so nobody else sees your changes; Admin is read-only. Demo data resets every night.
+
+Lighthouse (home page): Performance 93 mobile / 99 desktop · Accessibility 100 · Best Practices 100 · SEO 100.
 
 ---
 
