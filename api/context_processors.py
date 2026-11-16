@@ -4,7 +4,7 @@ from datetime import datetime
 
 from django.conf import settings
 
-from .models import Cart, Category
+from .models import Cart, categories_with_products
 
 
 def add_year(request):
@@ -33,5 +33,5 @@ def demo(request):
 
 def categories(request):
     return {
-        "categories": Category.objects.all()
+        "categories": categories_with_products()
     }

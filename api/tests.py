@@ -389,3 +389,100 @@ class DemoModeOffTests(TestCase):
         resp = self.client.get(reverse("login"))
         self.assertNotContains(resp, "demo_admin")
         self.assertNotContains(resp, "/demo/vendor/")
+
+
+class ShopSearchTests(BaseTestCase):
+    """Shop page filters and the header search / Categories menu that lead to it."""
+
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.fashion = Category.objects.create(name="Fashion", image=image())
+        cls.empty_category = Category.objects.create(name="Furniture", image=image())
+        cls.shirt = Product.objects.create(
+            name="Cotton Shirt", brand="Gul Ahmed", category=cls.fashion, short_details="Summer wear",
+            description="d", base_price=Decimal("2500.00"), stock=3, image=image(), is_available=True,
+            vendor=cls.vendor,
+        )
+        cls.hidden = Product.objects.create(
+            name="Unlisted Phone", category=cls.category, short_details="s", description="d",
+            base_price=Decimal("50.00"), stock=1, image=image(), is_available=False, vendor=cls.vendor,
+        )
+
+    def shop(self, **params):
+        resp = self.client.get(reverse("shop"), params)
+        self.assertEqual(resp.status_code, 200)
+        return resp, {p.pk for p in resp.context["products"]}
+
+    def test_filter_by_category_only(self):
+        _, ids = self.shop(category=self.fashion.pk)
+        self.assertEqual(ids, {self.shirt.pk})
+
+    def test_search_matches_name_brand_and_category(self):
+        for term in ("cotton", "gul ahmed", "fashion", "summer"):
+            _, ids = self.shop(q=term)
+            self.assertEqual(ids, {self.shirt.pk}, term)
+
+    def test_text_and_category_together(self):
+        _, ids = self.shop(q="shirt", category=self.category.pk)
+        self.assertEqual(ids, set())
+
+    def test_unavailable_products_are_not_listed(self):
+        _, ids = self.shop(q="unlisted")
+        self.assertEqual(ids, set())
+
+    def test_non_numeric_category_is_ignored(self):
+        resp, ids = self.shop(category="abc")
+        self.assertIsNone(resp.context["selected_category"])
+        self.assertEqual(ids, {self.product.pk, self.shirt.pk})
+        self.assertEqual(self.client.get(reverse("search_products"), {"category": "abc"}).status_code, 200)
+
+    def test_sort_by_price(self):
+        resp, _ = self.shop(sort="price_high")
+        self.assertEqual([p.pk for p in resp.context["products"]], [self.shirt.pk, self.product.pk])
+
+    def test_empty_categories_are_hidden(self):
+        resp, _ = self.shop()
+        names = {c.name for c in resp.context["categories"]}
+        self.assertEqual(names, {"Electronics", "Fashion"})
+        html = self.client.get(reverse("home")).content.decode()
+        self.assertNotIn(">Furniture<", html.replace("\n", "").replace("  ", ""))
+
+    def test_header_search_and_menu_go_to_shop(self):
+        html = self.client.get(reverse("home")).content.decode()
+        self.assertIn(f'action="{reverse("shop")}" role="search"', html)
+        self.assertIn(f'href="{reverse("shop")}?category={self.fashion.pk}"', html)
+        # The search box can be submitted with only a category chosen.
+        search_box = html[html.index('name="q"') - 120: html.index('name="q"') + 200]
+        self.assertNotIn("required", search_box)
+
+    def test_header_keeps_the_current_search(self):
+        html = self.client.get(reverse("shop"), {"category": self.fashion.pk, "q": "shirt"}).content.decode()
+        self.assertIn(f'<option value="{self.fashion.pk}" selected>', html)
+        self.assertIn('value="shirt"', html)
+
+
+class HomePageQueryTests(BaseTestCase):
+    """The home page lists many products; it must not run queries per product."""
+
+    def count_home_queries(self):
+        from django.db import connection
+        from django.test.utils import CaptureQueriesContext
+        self.client.get(reverse("home"))  # warm up the session and cart
+        with CaptureQueriesContext(connection) as ctx:
+            self.assertEqual(self.client.get(reverse("home")).status_code, 200)
+        return len(ctx.captured_queries)
+
+    def add_products(self, count, vendor):
+        for i in range(count):
+            Product.objects.create(
+                name=f"Extra {vendor.pk}-{i}", category=self.category, short_details="s", description="d",
+                base_price=Decimal("10.00"), stock=1, image=image(), is_available=True, vendor=vendor,
+            )
+
+    def test_query_count_does_not_grow_with_products(self):
+        before = self.count_home_queries()
+        self.add_products(8, self.other_vendor)
+        after = self.count_home_queries()
+        self.assertEqual(before, after)
+        self.assertLess(after, 40)

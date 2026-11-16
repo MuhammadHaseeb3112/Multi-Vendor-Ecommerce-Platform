@@ -10,6 +10,7 @@ from django.core.validators import FileExtensionValidator
 
 # -------------------- Order & Payment --------------------
 from django.db import models
+from django.db.models import Exists, OuterRef
 from django.utils import timezone
 from django.utils.text import slugify
 
@@ -169,6 +170,18 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+def categories_with_products():
+    """Categories that have at least one available product.
+
+    Used for the category menus, filters and the home page, so shoppers never
+    land on an empty category. Product.objects is sandbox-aware, so a demo
+    visitor's own products don't make a category appear for everyone else.
+    """
+    return Category.objects.filter(
+        Exists(Product.objects.filter(category=OuterRef('pk'), is_available=True))
+    )
+
+
 class ProductQuestion(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="questions")
     email = models.EmailField()

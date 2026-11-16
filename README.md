@@ -7,7 +7,7 @@
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple.svg)
 ![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791.svg)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)
-![Tests](https://img.shields.io/badge/Tests-42%20passing-brightgreen.svg)
+![Tests](https://img.shields.io/badge/Tests-52%20passing-brightgreen.svg)
 [![CI](https://github.com/MuhammadHaseeb3112/Multi-Vendor-Ecommerce-Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/MuhammadHaseeb3112/Multi-Vendor-Ecommerce-Platform/actions/workflows/ci.yml)
 [![Live demo](https://img.shields.io/badge/Live%20demo-mh--markethub.duckdns.org-BB2D3B.svg)](https://mh-markethub.duckdns.org/)
 
@@ -430,7 +430,7 @@ Deployment behind a reverse proxy is described in [deploy/DEPLOY.md](deploy/DEPL
 
 ## Run Tests
 
-42 automated tests cover access control, order tracking, payment data handling, cart and coupon flows, stock updates, login rate limiting and demo mode.
+52 automated tests cover access control, order tracking, payment data handling, cart and coupon flows, stock updates, login rate limiting, demo mode, shop search and category filters, and a query-count check that keeps the home page free of N+1 queries. They run on PostgreSQL in GitHub Actions on every push.
 
 ```bash
 python manage.py test api

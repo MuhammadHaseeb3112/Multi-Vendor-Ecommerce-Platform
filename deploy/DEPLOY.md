@@ -57,6 +57,26 @@ crontab -e
 30 3 * * * cd ~/markethub && docker compose -p markethub -f deploy/compose.prod.yml --env-file deploy/.env.prod exec -T markethub-web python manage.py seed_demo --reset >> ~/markethub-reset.log 2>&1
 ```
 
+## 6. Database backups
+
+`deploy/backup.sh` dumps the database to `~/backups/markethub/` (gzip, owner-only
+permissions) and keeps the last 14 days. Run it from cron a few minutes before
+the nightly reset:
+
+```bash
+crontab -e
+# 22:15 UTC (03:15 in Pakistan), before the demo reset
+15 22 * * * bash ~/markethub/deploy/backup.sh >> ~/markethub-backup.log 2>&1
+```
+
+Restore a backup:
+
+```bash
+gunzip -c ~/backups/markethub/markethub-YYYYmmdd-HHMM.sql.gz | \
+  docker compose -p markethub -f deploy/compose.prod.yml --env-file deploy/.env.prod \
+    exec -T db psql -U markethub -d markethub
+```
+
 ## Updating
 
 By hand, with a health check and automatic rollback:

@@ -10,7 +10,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, ListView
 
 from .forms import ReviewForm
-from .models import Category, Product, ProductColorVariant, Review
+from .models import Category, Product, ProductColorVariant, Review, categories_with_products
 
 
 class ProductListView(ListView):
@@ -38,7 +38,7 @@ class ProductListView(ListView):
         Adds categories, brands, and colors to the context for the sidebar filters.
         """
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
+        context['categories'] = categories_with_products()
 
         # Unique brand list from available products
         context['brands'] = Product.objects.filter(is_available=True) \
@@ -116,7 +116,7 @@ def search_products(request):
     if category_id.isdigit():
         products = products.filter(category_id=category_id)
 
-    categories = Category.objects.all()
+    categories = categories_with_products()
     return render(request, 'products/products_list.html', {
         'products': products,
         'categories': categories,

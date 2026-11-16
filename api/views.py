@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from .forms import CustomerForm
-from .models import Category, CustomUser, Product, ProductQuestion, Vendor
+from .models import Category, CustomUser, Product, ProductQuestion, Vendor, categories_with_products
 from .tracking import find_trackable_order
 
 
@@ -42,7 +42,7 @@ def home(request):
     products = available.filter(category__slug="electronics")
     
     selected_category_id = request.GET.get('category')
-    categories = Category.objects.all()
+    categories = categories_with_products()
     for vendor in top_vendors:
         vendor.rating_float = float(vendor.average_rating)
     badge_options = {

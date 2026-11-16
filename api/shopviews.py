@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.shortcuts import render
 
-from .models import Category, Product
+from .models import Product, categories_with_products
 
 
 def _category_id(value):
@@ -14,7 +14,7 @@ def _category_id(value):
 
 def shop_view(request):
     products = Product.objects.filter(is_available=True).select_related('category')
-    categories = Category.objects.all()
+    categories = categories_with_products()
     selected_category = _category_id(request.GET.get('category'))
     search_query = (request.GET.get('q') or '').strip()
     sort_by = request.GET.get('sort')
