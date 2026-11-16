@@ -8,6 +8,8 @@ name: Deploy
 #   Settings → Secrets and variables → Actions
 #   Secrets:   DEPLOY_HOST (server IP), DEPLOY_USER (ubuntu), DEPLOY_SSH_KEY (private key)
 #   Variables: DEPLOY_ENABLED = true, DEPLOY_URL = https://mh-markethub.duckdns.org
+#   (DEPLOY_ENABLED is matched with contains(), so a stray newline or space
+#   pasted into the value doesn't silently skip every deploy.)
 # See deploy/DEPLOY.md, "Automatic deploys".
 
 on:
@@ -24,7 +26,7 @@ concurrency:
 jobs:
   deploy:
     if: >-
-      vars.DEPLOY_ENABLED == 'true' &&
+      contains(vars.DEPLOY_ENABLED, 'true') &&
       (github.event_name == 'workflow_dispatch' ||
        (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'))
     runs-on: ubuntu-latest
