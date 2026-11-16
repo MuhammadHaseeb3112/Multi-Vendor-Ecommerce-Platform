@@ -54,7 +54,7 @@ Reload that Caddy. It gets the HTTPS certificate by itself.
 ```bash
 crontab -e
 # 03:30 every night
-30 3 * * * cd ~/markethub && docker compose -p markethub -f deploy/compose.prod.yml --env-file deploy/.env.prod exec -T web python manage.py seed_demo --reset >> ~/markethub-reset.log 2>&1
+30 3 * * * cd ~/markethub && docker compose -p markethub -f deploy/compose.prod.yml --env-file deploy/.env.prod exec -T markethub-web python manage.py seed_demo --reset >> ~/markethub-reset.log 2>&1
 ```
 
 ## Updating

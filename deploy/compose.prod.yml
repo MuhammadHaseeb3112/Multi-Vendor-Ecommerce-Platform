@@ -8,6 +8,11 @@
 #
 # Nothing is published on the host: the proxy reaches the app over "edge" as
 # markethub-web:8000. The database stays on this stack's private network.
+#
+# The app service is deliberately NOT called "web": Docker adds the service
+# name as a DNS alias on every network, and other projects on "edge" (e.g.
+# MHTalk's Caddy) proxy to their own "web". A second "web" there would steal
+# their traffic.
 
 services:
   db:
@@ -26,7 +31,7 @@ services:
       retries: 10
     mem_limit: 256m
 
-  web:
+  markethub-web:
     build:
       context: ..
     restart: unless-stopped
@@ -45,17 +50,15 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "python", "-c",
-             "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/login/', timeout=5).status == 200 else 1)"]
+             "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/login/', timeout=5).status == 200 else 1)"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 40s
     mem_limit: 512m
     networks:
-      default: {}
-      edge:
-        aliases:
-          - markethub-web
+      - default
+      - edge
 
 networks:
   edge:
