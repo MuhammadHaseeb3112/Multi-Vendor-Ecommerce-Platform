@@ -59,10 +59,32 @@ crontab -e
 
 ## Updating
 
+By hand, with a health check and automatic rollback:
+
 ```bash
-cd ~/markethub && git pull
-docker compose -p markethub -f deploy/compose.prod.yml --env-file deploy/.env.prod up -d --build
+cd ~/markethub && bash deploy/deploy.sh
 ```
+
+## Automatic deploys (GitHub Actions)
+
+Every push runs the tests on PostgreSQL (`.github/workflows/ci.yml`). When
+they pass on `main`, `.github/workflows/deploy.yml` connects to the server over
+SSH and runs `deploy/deploy.sh`: it pulls the new code, rebuilds, waits for the
+container health check and for the site through Caddy, and goes back to the
+previous version if either fails.
+
+Turn it on once, in the GitHub repository under
+**Settings → Secrets and variables → Actions**:
+
+| Kind | Name | Value |
+|---|---|---|
+| Secret | `DEPLOY_HOST` | the server's public IP |
+| Secret | `DEPLOY_USER` | `ubuntu` |
+| Secret | `DEPLOY_SSH_KEY` | a private key whose public key is in the server's `~/.ssh/authorized_keys` |
+| Variable | `DEPLOY_ENABLED` | `true` |
+| Variable | `DEPLOY_URL` | `https://mh-markethub.duckdns.org` |
+
+A deploy can also be started by hand from the **Actions** tab (Deploy → Run workflow).
 
 ## What demo mode does
 
