@@ -23,6 +23,9 @@
     @font-face{font-family:'Poppins';font-style:normal;font-weight:500;font-display:swap;src:url({% static 'vendor/poppins/poppins-latin-500-normal.woff2' %}) format('woff2')}
     @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url({% static 'vendor/poppins/poppins-latin-600-normal.woff2' %}) format('woff2')}
     @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url({% static 'vendor/poppins/poppins-latin-700-normal.woff2' %}) format('woff2')}
+    /* Below-the-fold home sections: let the browser skip laying them out
+       and painting them until they are about to scroll into view. */
+    .lazy-section{content-visibility:auto;contain-intrinsic-size:auto 600px}
     /* Keep icon space reserved while the icon stylesheet loads, so nothing jumps. */
     i.fa,i.fas,i.far,i.fab,i.fa-solid,i.fa-regular,i.fa-brands{display:inline-block;min-width:1em}
   </style>

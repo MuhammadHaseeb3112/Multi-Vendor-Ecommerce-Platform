@@ -25,7 +25,8 @@
     <h2 class="text-center fw-bold mb-5" data-aos="fade-up">Featured Products</h2>
 
     <div class="scrolling-wrapper d-flex flex-nowrap overflow-auto gap-4 pb-4">
-        {% for product in products %}
+        {# 12 is plenty for a carousel; every product is listed under Shop by Category. #}
+        {% for product in products|slice:":12" %}
         <div class="card flex-shrink-0 border-0 shadow rounded-4 position-relative"
              data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00"
              style="min-width: 260px; max-width: 260px; transition: transform 0.3s ease-in-out;"
@@ -91,17 +92,18 @@
         {% endfor %}
     </div>
 <hr >
-    {% include "partials/electronic_products.html" %}
+    <div class="lazy-section">{% include "partials/electronic_products.html" %}</div>
     <hr>
-    {% include "partials/deals_products.html" %}
+    <div class="lazy-section">{% include "partials/deals_products.html" %}</div>
     <hr>
-    {% include "partials/mens_products.html" %}
+    <div class="lazy-section">{% include "partials/mens_products.html" %}</div>
     <hr>
-     {% include "partials/women_fashion.html" %}
+    <div class="lazy-section">{% include "partials/women_fashion.html" %}</div>
     
     <hr class="my-5">
 
     <!-- Shop by Category -->
+    <div class="lazy-section">
     <h2 class="text-center fw-bold mb-4" data-aos="fade-in">Shop by Category</h2>
 
     <div class="text-center mb-4" data-aos="fade-up">
@@ -132,6 +134,7 @@
         </div>
         {% endfor %}
     </div>
+    </div>
 </div>
 
 <!-- Quick View Modal -->
@@ -148,7 +151,7 @@
         </div>
     </div>
 </div>
-{% include "partials/top_vendor.html" %}
+<div class="lazy-section">{% include "partials/top_vendor.html" %}</div>
 
 <!-- Scripts -->
 <script>
@@ -168,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const productCards = document.querySelectorAll('.product-card');
+    const productCards = document.querySelectorAll('#filtered-products .product-card');
 
     filterButtons.forEach(btn => {
         btn.addEventListener('click', function () {

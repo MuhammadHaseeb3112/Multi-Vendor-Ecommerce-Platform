@@ -19,7 +19,7 @@
 <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
   <div class="container-fluid px-4">
     <a class="navbar-brand me-4 d-flex align-items-center" href="{% url 'home' %}">
-      <img src="{% static 'images/logo-1.png' %}" alt="MarketHub" class="img-fluid" width="150" height="100" fetchpriority="high" style="height: 100px; width: auto;">
+      <img src="{% static 'images/logo-1.webp' %}" alt="MarketHub" class="img-fluid" width="150" height="100" style="height: 100px; width: auto;">
     </a>
 
     <!-- Categories Dropdown -->
@@ -33,7 +33,7 @@
         <li class="mb-1">
           <a class="dropdown-item d-flex align-items-center {% if category.id == selected_category_id %}active{% endif %}"
             href="?category={{ category.id }}">
-            <img src="{{ category.image.url }}" class="me-2 rounded-circle" width="28" height="28" style="object-fit: cover;"
+            <img src="{{ category.image.url }}" loading="lazy" decoding="async" class="me-2 rounded-circle" width="28" height="28" style="object-fit: cover;"
               alt="{{ category.name }}">
             {{ category.name }}
             {% if category.badge %}
