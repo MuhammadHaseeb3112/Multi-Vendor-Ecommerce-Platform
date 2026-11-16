@@ -152,13 +152,12 @@
 
         <h5>Product Details</h5>
         {% for item in order_items %}
-        <p><strong>Product:</strong> {{ item.product.title }}</p>
+        <p><strong>Product:</strong> {{ item.product.name }}</p>
         <p><strong>Variant:</strong>
-          {% if item.variant_color %}Color - {{ item.variant_color.color_name }}{% endif %}
-          {% if item.variant_size %}, Size - {{ item.variant_size.size }}{% endif %}
+          {% if item.color or item.size %}{% if item.color %}Color: {{ item.color }}{% endif %}{% if item.color and item.size %}, {% endif %}{% if item.size %}Size: {{ item.size }}{% endif %}{% else %}Standard{% endif %}
         </p>
         <p><strong>Quantity:</strong> {{ item.quantity }}</p>
-        <p><strong>Price:</strong> PKR{{ item.total_price }}</p>
+        <p><strong>Price:</strong> PKR {{ item.price }} each</p>
         <hr>
         {% endfor %}
 

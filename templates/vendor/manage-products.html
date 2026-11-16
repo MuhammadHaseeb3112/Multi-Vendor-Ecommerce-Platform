@@ -89,10 +89,10 @@
         {% for product in products %}
         <div class="col-md-6 col-xl-4 mb-4">
           <div class="card shadow-sm h-100">
-            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}">
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
             <div class="card-body d-flex flex-column justify-content-between">
               <div>
-                <h5 class="card-title">{{ product.title }}</h5>
+                <h5 class="card-title">{{ product.name }}</h5>
                 <p class="card-text">{{ product.description|truncatewords:15 }}</p>
                 <p><strong>Stock:</strong> {{ product.stock }}</p>
               </div>

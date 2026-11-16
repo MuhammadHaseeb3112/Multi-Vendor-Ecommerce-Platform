@@ -93,7 +93,7 @@
         <ul class="mb-2">
           {% for item in order.items.all %}
           <li>
-            <strong>{{ item.product.title }}</strong> —
+            <strong>{{ item.product.name }}</strong> —
             Qty: {{ item.quantity }} —
             PKR {{ item.price }}
           </li>
@@ -120,7 +120,7 @@
         <ul class="mb-2">
           {% for item in order.items.all %}
           <li>
-            <strong>{{ item.product.title }}</strong> from <em>{{ item.product.vendor.business_name }}</em> —
+            <strong>{{ item.product.name }}</strong> from <em>{{ item.product.vendor.business_name }}</em> —
             Qty: {{ item.quantity }} —
             PKR {{ item.price }}
           </li>

@@ -166,11 +166,10 @@
           {% for item in order_items %}
           <p><strong>Product:</strong> {{ item.product.name }}</p>
           <p><strong>Variant:</strong>
-            {% if item.variant_color %}Color - {{ item.variant_color.color_name|default:"N/A" }}{% endif %}
-            {% if item.variant_size %}, Size - {{ item.variant_size.size_label|default:"N/A" }}{% endif %}
-          </p>
+          {% if item.color or item.size %}{% if item.color %}Color: {{ item.color }}{% endif %}{% if item.color and item.size %}, {% endif %}{% if item.size %}Size: {{ item.size }}{% endif %}{% else %}Standard{% endif %}
+        </p>
           <p><strong>Quantity:</strong> {{ item.quantity }}</p>
-          <p><strong>Price:</strong> PKR {{ order.total_amount }}</p>
+          <p><strong>Price:</strong> PKR {{ item.price }} each</p>
           <hr>
           {% endfor %}
 
