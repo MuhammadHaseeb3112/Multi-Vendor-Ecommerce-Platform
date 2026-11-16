@@ -36,10 +36,22 @@ class CartMiddleware:
 
 
 class DemoGuardMiddleware:
-    """In DEMO_MODE, block changes that would lock other visitors out of the
-    shared demo logins: passwords, profiles and user/vendor management."""
+    """Keeps the shared public demo clean for every visitor (DEMO_MODE only).
 
-    LOCKED = (
+    - demo_customer, demo_vendor and demo_admin are shared logins, so they are
+      read-only: every page opens, but nothing they submit is saved.
+    - "Customer" on the login page creates a private visitor account
+      (see api/demoviews.py), which can shop, check out and track orders.
+    - Things every visitor would see (reviews, questions, sign-ups) and
+      account/password changes are switched off for everyone.
+    """
+
+    SHARED_READ_ONLY = ('demo_customer', 'demo_vendor', 'demo_admin')
+    ALWAYS_ALLOWED = ('/login/', '/logout/', '/demo/')
+    LOCKED_FOR_ALL = (
+        '/register/',
+        '/vendor/register/',
+        '/ask-question/',
         '/profile/change-password/',
         '/profile/edit/',
         '/password-reset/',
@@ -52,12 +64,26 @@ class DemoGuardMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
+    def blocked_reason(self, request):
+        if request.method in ('GET', 'HEAD', 'OPTIONS'):
+            return None
+        path = request.path
+        if path.startswith(self.ALWAYS_ALLOWED):
+            return None
+        if path.startswith(self.LOCKED_FOR_ALL) or path.endswith('/review/'):
+            return "This action is turned off in the public demo."
+        if request.user.is_authenticated and request.user.username in self.SHARED_READ_ONLY:
+            return ("This shared demo account is read-only, so other visitors always see the "
+                    "same data. Click \"Customer\" on the login page for your own account.")
+        return None
+
     def __call__(self, request):
-        if (
-            settings.DEMO_MODE
-            and request.method not in ('GET', 'HEAD', 'OPTIONS')
-            and request.path.startswith(self.LOCKED)
-        ):
-            messages.warning(request, "This action is disabled in the public demo.")
-            return redirect(request.META.get('HTTP_REFERER') or 'home')
+        if settings.DEMO_MODE:
+            reason = self.blocked_reason(request)
+            if reason:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    from django.http import JsonResponse
+                    return JsonResponse({'success': False, 'message': reason}, status=403)
+                messages.warning(request, reason)
+                return redirect(request.META.get('HTTP_REFERER') or 'home')
         return self.get_response(request)

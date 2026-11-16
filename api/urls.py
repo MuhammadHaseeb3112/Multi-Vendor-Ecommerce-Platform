@@ -6,6 +6,7 @@ from . import (
     cartviews,
     checkoutviews,
     contactviews,
+    demoviews,
     history,
     paymentviews,
     productsviews,
@@ -29,6 +30,7 @@ from .productsviews import (
 urlpatterns = [
     # -------------------- Authentication --------------------
     path('login/', authviews.login_view, name='login'),
+    path('demo/customer/', demoviews.demo_customer_login, name='demo_customer_login'),
     path('register/', authviews.register_customer, name='register_customer'),
     path('vendor/register/', authviews.register_vendor, name='register_vendor'),
     path('logout/', authviews.logout_view, name='logout'),

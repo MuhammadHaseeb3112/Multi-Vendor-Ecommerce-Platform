@@ -24,8 +24,12 @@
 
       {% if DEMO_MODE %}
       <div class="alert alert-info rounded-4">
-        <strong>Live demo.</strong> Sign in as any role, password <code>{{ demo_password }}</code>:
+        <strong>Live demo.</strong> Pick a role to look around:
         <div class="d-flex gap-2 mt-2">
+          <form method="post" action="{% url 'demo_customer_login' %}" class="flex-fill">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-dark w-100">Customer</button>
+          </form>
           {% for label, username in demo_accounts %}
           <form method="post" class="flex-fill">
             {% csrf_token %}
@@ -35,7 +39,10 @@
           </form>
           {% endfor %}
         </div>
-        <small class="text-muted d-block mt-2">Data resets every night. No real payments or emails.</small>
+        <small class="text-muted d-block mt-2">
+          Customer gets a private account you can shop with. Vendor and Admin are read-only views.
+          Data resets every night. No real payments or emails.
+        </small>
       </div>
       {% endif %}
 

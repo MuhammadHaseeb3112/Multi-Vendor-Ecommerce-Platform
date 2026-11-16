@@ -268,6 +268,53 @@ class DemoModeTests(TestCase):
         })
         self.assertTrue(User.objects.get(username="demo_customer").check_password("DemoPass123!"))
 
+    def test_customer_button_creates_private_account(self):
+        from django.core.cache import cache
+        cache.clear()
+        template_orders = Order.objects.filter(user__username="demo_customer").count()
+        resp = self.client.post(reverse("demo_customer_login"))
+        self.assertRedirects(resp, reverse("customer_dashboard"))
+        visitor = User.objects.get(pk=self.client.session["_auth_user_id"])
+        self.assertTrue(visitor.username.startswith("visitor_"))
+        self.assertEqual(Order.objects.filter(user=visitor).count(), template_orders)
+        # a second visitor gets a different account
+        other = self.client_class()
+        other.post(reverse("demo_customer_login"))
+        self.assertNotEqual(other.session["_auth_user_id"], self.client.session["_auth_user_id"])
+
+    def test_visitor_can_shop(self):
+        from django.core.cache import cache
+        cache.clear()
+        self.client.post(reverse("demo_customer_login"))
+        product = Product.objects.filter(base_price__lt=60000).first()
+        self.client.post(reverse("add_to_cart"), {"product_id": product.id, "quantity": 1})
+        visitor = User.objects.get(pk=self.client.session["_auth_user_id"])
+        self.assertEqual(Cart.for_user(visitor).items.count(), 1)
+
+    def test_shared_vendor_is_read_only(self):
+        self.client.login(username="demo_vendor", password="DemoPass123!")
+        product = Product.objects.filter(vendor__user__username="demo_vendor").first()
+        self.client.post(reverse("delete_product", args=[product.pk]))
+        self.assertTrue(Product.objects.filter(pk=product.pk).exists())
+
+    def test_shared_admin_is_read_only(self):
+        self.client.login(username="demo_admin", password="DemoPass123!")
+        coupon = Coupon.objects.first()
+        self.client.post(reverse("admin-coupon-delete", args=[coupon.pk]))
+        self.assertTrue(Coupon.objects.filter(pk=coupon.pk).exists())
+
+    def test_reviews_and_signups_are_off(self):
+        from django.core.cache import cache
+        cache.clear()
+        self.client.post(reverse("register_customer"), {"username": "newbie", "email": "n@example.com",
+                                                         "password1": "Xyz12345!a", "password2": "Xyz12345!a"})
+        self.assertFalse(User.objects.filter(username="newbie").exists())
+        self.client.post(reverse("demo_customer_login"))
+        product = Product.objects.first()
+        before = product.reviews.count()
+        self.client.post(reverse("add_review", args=[product.slug]), {"rating": 1, "comment": "spam"})
+        self.assertEqual(product.reviews.count(), before)
+
     def test_admin_cannot_delete_users_in_demo(self):
         self.client.login(username="demo_admin", password="DemoPass123!")
         target = User.objects.get(username="demo_customer")
@@ -281,6 +328,9 @@ class DemoModeOffTests(TestCase):
         from django.core.management.base import CommandError
         with self.assertRaises(CommandError):
             call_command("seed_demo", verbosity=0)
+
+    def test_demo_customer_url_is_off(self):
+        self.assertEqual(self.client.post(reverse("demo_customer_login")).status_code, 404)
 
     def test_login_page_has_no_demo_box(self):
         self.assertNotContains(self.client.get(reverse("login")), "demo_vendor")
