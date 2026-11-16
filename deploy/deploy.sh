@@ -20,7 +20,9 @@ set -euo pipefail
 # The braces make bash read the whole script before running it: "git reset"
 # below replaces this file while it runs.
 {
-cd "$(dirname "$0")/.."
+# APP_DIR: the checkout to deploy (set by the GitHub workflow, which runs a
+# fresh copy of this script from /tmp). Defaults to the repo this file is in.
+cd "${APP_DIR:-$(dirname "$0")/..}"
 BRANCH="${DEPLOY_BRANCH:-main}"
 ENV_FILE="deploy/.env.prod"
 [ -f "$ENV_FILE" ] || { echo "Missing $ENV_FILE (see deploy/DEPLOY.md)"; exit 1; }

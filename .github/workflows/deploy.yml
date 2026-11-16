@@ -39,7 +39,13 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           command_timeout: 25m
-          script: cd ~/markethub && bash deploy/deploy.sh
+          # Run the deploy script from the commit being deployed (not the copy
+          # already on the server), so changes to the script itself take effect.
+          script: |
+            cd ~/markethub &&
+            git fetch --quiet origin main &&
+            git show origin/main:deploy/deploy.sh > /tmp/markethub-deploy.sh &&
+            APP_DIR=~/markethub bash /tmp/markethub-deploy.sh
 
       - name: Check the live site
         if: vars.DEPLOY_URL != ''
