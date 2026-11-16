@@ -50,14 +50,14 @@
           <div class="row row-cols-2 g-2 mb-3">
             {% for product in vendor.products.all|slice:":4" %}
             <div class="col">
-              <img src="{{ product.image.url }}" class="img-fluid product-img" alt="{{ product.name }}">
+              <img loading="lazy" decoding="async" src="{{ product.image.url }}" class="img-fluid product-img" alt="{{ product.name }}">
             </div>
             {% endfor %}
           </div>
 
           <!-- Vendor Info -->
           <div class="d-flex align-items-center gap-2 justify-content-center mb-1">
-            <img src="{% if vendor.logo %}{{ vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}" class="vendor-logo" alt="{{ vendor.business_name }}">
+            <img loading="lazy" decoding="async" src="{% if vendor.logo %}{{ vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}" class="vendor-logo" alt="{{ vendor.business_name }}">
             <strong>{{ vendor.business_name }}</strong>
           </div>
           <p class="mb-1 text-muted small">({{ vendor.products.count }} Products)</p>
@@ -87,7 +87,7 @@
             </div>
             <div class="modal-body">
               <div class="d-flex gap-3 align-items-center mb-3">
-                <img src="{% if vendor.logo %}{{ vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}" alt="{{ vendor.business_name }}" class="vendor-logo">
+                <img loading="lazy" decoding="async" src="{% if vendor.logo %}{{ vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}" alt="{{ vendor.business_name }}" class="vendor-logo">
                 <div>
                   <h5 class="mb-1">{{ vendor.business_name }}</h5>
                   <p class="text-muted small mb-0">{{ vendor.products.count }} Products</p>
@@ -100,7 +100,7 @@
               <div class="row g-2">
                 {% for product in vendor.products.all|slice:":4" %}
                 <div class="col-3">
-                  <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+                  <img loading="lazy" decoding="async" src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
                 </div>
                 {% endfor %}
               </div>
@@ -119,4 +119,3 @@
 </section>
 
 <!-- Bootstrap 5 JS (for modal functionality) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

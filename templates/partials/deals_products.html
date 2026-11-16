@@ -75,7 +75,7 @@
     <!-- Category Info -->
     <div class="col-lg-4 mb-4">
       <div class="card shadow-sm border-0 h-100">
-        <img src="{{ deals_category.image.url }}" alt="{{ deals_category.name }}" class="card-img-top" style="height: 320px; width:200px: object-fit: cover;">
+        <img loading="lazy" decoding="async" src="{{ deals_category.image.url }}" alt="{{ deals_category.name }}" class="card-img-top" style="height: 320px; width:200px: object-fit: cover;">
         <div class="card-body text-center">
           <h4 class="card-title">{{ deals_category.name }}</h4>
           <p class="text-muted">{{ deals_category.description|truncatewords:20 }}</p>
@@ -96,8 +96,8 @@
             </span>
             {% endif %}
 
-            <button type="button"
-              class="quick-view-btn btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm"
+            <button type="button" aria-label="Quick view"
+          class="quick-view-btn btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm"
               data-product-id="{{ product.id }}"
               data-bs-toggle="modal"
               data-bs-target="#quickViewModal">
@@ -115,7 +115,7 @@
               <p class="text-muted small mb-1">Category: {{ product.category.name }}</p>
 
               <div class="d-flex align-items-center gap-2 mb-2">
-                <img src="{% if product.vendor.logo %}{{ product.vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}"
+                <img loading="lazy" decoding="async" src="{% if product.vendor.logo %}{{ product.vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}"
                   class="rounded-circle img-fluid"
                   style="width: 28px; height: 28px; object-fit: cover;"
                   alt="{{ product.vendor.business_name }}">

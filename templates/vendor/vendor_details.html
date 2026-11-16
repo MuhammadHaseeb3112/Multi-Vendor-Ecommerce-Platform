@@ -6,7 +6,7 @@
   <div class="card shadow-lg border-0 mb-4">
     <div class="row g-0">
       <div class="col-md-4 bg-light text-center p-4">
-        <img src="{% if vendor.logo %}{{ vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px;" alt="Logo">
+        <img loading="lazy" decoding="async" src="{% if vendor.logo %}{{ vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px;" alt="Logo">
         <h3 class="fw-bold">
           {{ vendor.business_name }}
           {% if vendor.verified_vendor %}
@@ -98,7 +98,7 @@
         {% for product in products %}
           <div class="col-md-4">
             <div class="card h-100 border-0 shadow-sm">
-              <img src="{{ product.image.url }}" class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ product.name }}">
+              <img loading="lazy" decoding="async" src="{{ product.image.url }}" class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ product.name }}">
               <div class="card-body">
                 <h5 class="card-title">{{ product.name }}</h5>
                 <p class="card-text text-muted">{{ product.short_details|truncatechars:100 }}</p>

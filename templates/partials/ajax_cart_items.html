@@ -3,16 +3,16 @@
     {% for item in cart.items %}
     <li class="list-group-item d-flex justify-content-between align-items-start">
       <div class="d-flex align-items-center">
-        <img src="{{ item.product.image.url }}" width="50" height="50" class="rounded me-2" alt="{{ item.product.name }}">
+        <img loading="lazy" decoding="async" src="{{ item.product.image.url }}" width="50" height="50" class="rounded me-2" alt="{{ item.product.name }}">
         <div>
           <div class="fw-semibold">{{ item.product.name }}</div>
           <div class="text-muted small">{{ item.quantity }} × Rs. {{ item.price }}</div>
         </div>
       </div>
       <div class="text-end">
-        <button class="btn btn-sm btn-outline-secondary me-1" onclick="updateCartItem('{{ item.id }}', 'decrease')">−</button>
-        <button class="btn btn-sm btn-outline-secondary" onclick="updateCartItem('{{ item.id }}', 'increase')">+</button>
-        <button class="btn btn-sm btn-outline-danger ms-2" onclick="updateCartItem('{{ item.id }}', 'remove')"><i class="fas fa-trash"></i></button>
+        <button class="btn btn-sm btn-outline-secondary me-1" onclick="updateCartItem('{{ item.id }}', 'decrease')" aria-label="Decrease quantity">−</button>
+        <button class="btn btn-sm btn-outline-secondary" onclick="updateCartItem('{{ item.id }}', 'increase')" aria-label="Increase quantity">+</button>
+        <button class="btn btn-sm btn-outline-danger ms-2" onclick="updateCartItem('{{ item.id }}', 'remove')" aria-label="Remove item"><i class="fas fa-trash"></i></button>
       </div>
     </li>
     {% endfor %}

@@ -122,6 +122,14 @@ class AccessControlTests(BaseTestCase):
         self.assertEqual(resp.status_code, 404)
 
 
+class VendorAreaTests(BaseTestCase):
+    def test_customer_opening_vendor_pages_is_redirected(self):
+        self.client.force_login(self.customer)
+        for name in ["vendor_earnings", "vendor_manage_orders", "vendor_dashboard"]:
+            with self.subTest(page=name):
+                self.assertIn(self.client.get(reverse(name)).status_code, (302, 403, 404))
+
+
 class VendorStockTests(BaseTestCase):
     def test_mark_processing_decrements_stock(self):
         self.client.force_login(self.vendor_user)
@@ -259,7 +267,10 @@ class DemoModeTests(TestCase):
                 self.client.logout()
 
     def test_login_page_shows_demo_accounts(self):
-        self.assertContains(self.client.get(reverse("login")), "demo_vendor")
+        resp = self.client.get(reverse("login"))
+        self.assertContains(resp, reverse("demo_customer_login"))
+        self.assertContains(resp, reverse("demo_vendor_login"))
+        self.assertContains(resp, "demo_admin")
 
     def test_password_change_is_blocked(self):
         self.client.login(username="demo_customer", password="DemoPass123!")
@@ -276,7 +287,7 @@ class DemoModeTests(TestCase):
         self.assertRedirects(resp, reverse("customer_dashboard"))
         visitor = User.objects.get(pk=self.client.session["_auth_user_id"])
         self.assertTrue(visitor.username.startswith("visitor_"))
-        self.assertEqual(Order.objects.filter(user=visitor).count(), template_orders)
+        self.assertEqual(Order.all_objects.filter(user=visitor).count(), template_orders)
         # a second visitor gets a different account
         other = self.client_class()
         other.post(reverse("demo_customer_login"))
@@ -290,6 +301,48 @@ class DemoModeTests(TestCase):
         self.client.post(reverse("add_to_cart"), {"product_id": product.id, "quantity": 1})
         visitor = User.objects.get(pk=self.client.session["_auth_user_id"])
         self.assertEqual(Cart.for_user(visitor).items.count(), 1)
+
+    def test_vendor_button_creates_private_store(self):
+        from django.core.cache import cache
+        cache.clear()
+        public_before = Product.objects.count()
+        resp = self.client.post(reverse("demo_vendor_login"))
+        self.assertRedirects(resp, reverse("vendor_dashboard"))
+        visitor = User.objects.get(pk=self.client.session["_auth_user_id"])
+        store = Vendor.all_objects.get(user=visitor)
+        own = Product.all_objects.filter(vendor=store)
+        template_count = Product.all_objects.filter(vendor__user__username="demo_vendor").count()
+        self.assertEqual(own.count(), template_count)
+        self.assertTrue(OrderItem.all_objects.filter(product__vendor=store).exists())
+        # The visitor can manage their own store...
+        self.assertEqual(self.client.get(reverse("vendor_dashboard")).status_code, 200)
+        product = own.first()
+        self.client.post(reverse("delete_product", args=[product.pk]))
+        self.assertFalse(Product.all_objects.filter(pk=product.pk).exists())
+        # ...and nobody else sees it.
+        other = self.client_class()
+        self.assertEqual(other.get(reverse("shop")).status_code, 200)
+        from api import sandbox
+        token = sandbox.current_user_id.set(None)
+        try:
+            self.assertEqual(Product.objects.count(), public_before)
+            self.assertFalse(Order.objects.filter(owner_visitor=visitor).exists())
+        finally:
+            sandbox.current_user_id.reset(token)
+        resp = other.get(reverse("vendor_detail", args=[store.vendor_slug]))
+        self.assertNotContains(resp, own.first().name, status_code=resp.status_code)
+
+    def test_visitor_orders_hidden_from_shared_vendor(self):
+        from django.core.cache import cache
+        cache.clear()
+        self.client.post(reverse("demo_customer_login"))
+        visitor = User.objects.get(pk=self.client.session["_auth_user_id"])
+        from api import sandbox
+        token = sandbox.current_user_id.set(User.objects.get(username="demo_vendor").pk)
+        try:
+            self.assertFalse(Order.objects.filter(user=visitor).exists())
+        finally:
+            sandbox.current_user_id.reset(token)
 
     def test_shared_vendor_is_read_only(self):
         self.client.login(username="demo_vendor", password="DemoPass123!")
@@ -333,4 +386,6 @@ class DemoModeOffTests(TestCase):
         self.assertEqual(self.client.post(reverse("demo_customer_login")).status_code, 404)
 
     def test_login_page_has_no_demo_box(self):
-        self.assertNotContains(self.client.get(reverse("login")), "demo_vendor")
+        resp = self.client.get(reverse("login"))
+        self.assertNotContains(resp, "demo_admin")
+        self.assertNotContains(resp, "/demo/vendor/")

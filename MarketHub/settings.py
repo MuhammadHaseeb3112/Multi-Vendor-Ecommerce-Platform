@@ -1,4 +1,5 @@
 import os
+import sys
 from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
 from dotenv import load_dotenv
@@ -65,7 +66,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-MIDDLEWARE += ['api.middleware.CartMiddleware', 'api.middleware.DemoGuardMiddleware']
+MIDDLEWARE += [
+    'api.middleware.MediaCacheMiddleware',
+    'api.sandbox.SandboxMiddleware',
+    'api.middleware.CartMiddleware',
+    'api.middleware.DemoGuardMiddleware',
+    'api.middleware.VendorAreaMiddleware',
+]
 
 ROOT_URLCONF = 'MarketHub.urls'
 
@@ -219,8 +226,15 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
+# Hashed static file names (long browser caching). Not strict, so a missing
+# file can never take a page down.
+WHITENOISE_MANIFEST_STRICT = False
+
+# Tests render templates without running collectstatic first.
+if "test" in sys.argv:
+    STORAGES["staticfiles"] = {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"}
 
 
 # Make sure you have the following settings:

@@ -7,7 +7,7 @@
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple.svg)
 ![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791.svg)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)
-![Tests](https://img.shields.io/badge/Tests-39%20passing-brightgreen.svg)
+![Tests](https://img.shields.io/badge/Tests-42%20passing-brightgreen.svg)
 
 ---
 
@@ -410,16 +410,21 @@ docker compose exec web python manage.py seed_demo --force   # Docker
 
 Logins: `demo_customer`, `demo_vendor`, `demo_admin`, password `DemoPass123!`.
 
-Setting `DEMO_MODE=True` turns the app into a safe public demo: every visitor
-who picks "Customer" gets a private account, the shared Vendor and Admin logins
-are read-only, no email is sent and sign-ups/reviews are off.
+Setting `DEMO_MODE=True` turns the app into a safe public demo:
+
+- **Customer** and **Vendor** on the login page create a private sandbox
+  account. A vendor gets their own copy of a store (products, orders,
+  earnings) to manage freely; nothing they do is visible to other visitors
+  (per-request sandbox filtering in `api/sandbox.py`).
+- **Admin** is a read-only view of the whole marketplace.
+- No email is sent; sign-ups and reviews are off; data resets nightly.
 Deployment behind a reverse proxy is described in [deploy/DEPLOY.md](deploy/DEPLOY.md).
 
 ---
 
 ## Run Tests
 
-39 automated tests cover access control, order tracking, payment data handling, cart and coupon flows, stock updates, login rate limiting and demo mode.
+42 automated tests cover access control, order tracking, payment data handling, cart and coupon flows, stock updates, login rate limiting and demo mode.
 
 ```bash
 python manage.py test api

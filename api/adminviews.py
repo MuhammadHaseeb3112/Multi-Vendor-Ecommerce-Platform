@@ -35,7 +35,7 @@ def admin_dashboard(request):
     context = {
         "total_products": Product.objects.count(),
         "total_vendors": Vendor.objects.count(),
-        "total_customers": CustomUser.objects.filter(is_vendor=False).count(),
+        "total_customers": CustomUser.objects.filter(is_vendor=False).exclude(username__startswith="visitor_").count(),
         "pending_orders": Order.objects.filter(status='Pending').count(),
         "shipped_orders": Order.objects.filter(status='Shipped').count(),
         "delivered_orders": Order.objects.filter(status='Delivered').count(),

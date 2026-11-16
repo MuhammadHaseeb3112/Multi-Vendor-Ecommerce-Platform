@@ -5,6 +5,39 @@ from django.shortcuts import redirect
 from .models import Cart
 
 
+class MediaCacheMiddleware:
+    """Let browsers cache uploaded images (served by Django when SERVE_MEDIA=True)."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if request.path.startswith('/media/') and response.status_code == 200:
+            response['Cache-Control'] = 'public, max-age=604800'
+        return response
+
+
+class VendorAreaMiddleware:
+    """Vendor pages look up request.user.vendor; a customer or admin who opens
+    one should get a friendly redirect, not a server error."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        return self.get_response(request)
+
+    def process_exception(self, request, exception):
+        from django.core.exceptions import ObjectDoesNotExist
+
+        if request.path.startswith('/vendor/') and isinstance(exception, ObjectDoesNotExist):
+            if 'vendor' in str(exception).lower():
+                messages.info(request, "That page is for vendors. Sign in with a vendor account to see it.")
+                return redirect('home')
+        return None
+
+
 class CartMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -58,7 +91,6 @@ class DemoGuardMiddleware:
         '/reset/',
         '/admin-panel/customers/',
         '/admin-panel/vendors/',
-        '/vendor/edit-profile/',
     )
 
     def __init__(self, get_response):
@@ -74,7 +106,7 @@ class DemoGuardMiddleware:
             return "This action is turned off in the public demo."
         if request.user.is_authenticated and request.user.username in self.SHARED_READ_ONLY:
             return ("This shared demo account is read-only, so other visitors always see the "
-                    "same data. Click \"Customer\" on the login page for your own account.")
+                    "same data. Pick Customer or Vendor on the login page for your own account.")
         return None
 
     def __call__(self, request):

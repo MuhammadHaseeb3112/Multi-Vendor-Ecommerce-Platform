@@ -34,8 +34,8 @@
             {% endif %}
 
             <!-- Quick View Button -->
-            <button type="button"
-                    class="quick-view-btn btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm d-none"
+            <button type="button" aria-label="Quick view"
+          class="quick-view-btn btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm d-none"
                     data-product-id="{{ product.id }}"
                     data-bs-toggle="modal"
                     data-bs-target="#quickViewModal">
@@ -57,7 +57,7 @@
                 <p class="text-muted small mb-1">Category: {{ product.category.name }}</p>
 
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <img src="{% if product.vendor.logo %}{{ product.vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}"
+                    <img loading="lazy" decoding="async" src="{% if product.vendor.logo %}{{ product.vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}"
                          class="rounded-circle img-fluid"
                          style="width: 28px; height: 28px; object-fit: cover;"
                          alt="{{ product.vendor.business_name }}">
@@ -135,7 +135,7 @@
         <div class="modal-content rounded-4">
             <div class="modal-header">
                 <h5 class="modal-title" id="quickViewLabel">Product Preview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" id="quickViewContent">
                 <div class="text-center p-5">Loading...</div>
@@ -186,8 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 {% block extra_scripts %}
 <!-- AOS Animation -->
-<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script>
   AOS.init({ once: true });
 </script>

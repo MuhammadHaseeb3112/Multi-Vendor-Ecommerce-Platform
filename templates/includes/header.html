@@ -8,9 +8,9 @@
       <span><i class="fas fa-envelope me-1 text-secondary"></i> mhasseb3112@gmail.com</span>
     </div>
     <div class="d-flex align-items-center gap-3 mt-2 mt-md-0">
-      <a href="https://www.facebook.com/mhaseeb.haseeb.5817" class="text-muted"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://www.instagram.com/muhammadhaseeb012" class="text-muted"><i class="fab fa-instagram"></i></a>
-      <a href="https://wa.me/923130067082" class="text-muted"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://www.facebook.com/mhaseeb.haseeb.5817" aria-label="Facebook" class="text-muted"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/muhammadhaseeb012" aria-label="Instagram" class="text-muted"><i class="fab fa-instagram"></i></a>
+      <a href="https://wa.me/923130067082" aria-label="WhatsApp" class="text-muted"><i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
 </div>
@@ -19,7 +19,7 @@
 <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
   <div class="container-fluid px-4">
     <a class="navbar-brand me-4 d-flex align-items-center" href="{% url 'home' %}">
-      <img src="{% static 'images/logo-1.png' %}" alt="MarketHub" class="img-fluid" style="height: 100px; width: auto;">
+      <img src="{% static 'images/logo-1.png' %}" alt="MarketHub" class="img-fluid" width="150" height="100" fetchpriority="high" style="height: 100px; width: auto;">
     </a>
 
     <!-- Categories Dropdown -->
@@ -50,14 +50,14 @@
     <!-- Search Form -->
     <form class="d-flex flex-grow-1 mx-2" method="GET" action="{% url 'search_products' %}">
       <div class="input-group rounded-pill overflow-hidden border border-danger">
-        <select name="category" class="form-select border-0" style="max-width: 160px;">
+        <select name="category" aria-label="Category" class="form-select border-0" style="max-width: 160px;">
           <option value="">All Categories</option>
           {% for category in categories %}
           <option value="{{ category.id }}">{{ category.name }}</option>
           {% endfor %}
         </select>
         <input type="search" name="q" class="form-control border-0" placeholder="Search Item..." required>
-        <button class="btn btn-danger rounded-0 px-4" type="submit"><i class="fas fa-search"></i></button>
+        <button class="btn btn-danger rounded-0 px-4" type="submit" aria-label="Search"><i class="fas fa-search"></i></button>
       </div>
     </form>
 
@@ -166,7 +166,7 @@
         {% csrf_token %}
         <div class="modal-header border-bottom-0">
           <h5 class="modal-title fw-bold">Welcome Back!</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body py-4 px-4">
           <div class="mb-3">

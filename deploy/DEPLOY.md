@@ -66,10 +66,11 @@ docker compose -p markethub -f deploy/compose.prod.yml --env-file deploy/.env.pr
 
 ## What demo mode does
 
-- The login page offers one-click roles. "Customer" creates a private visitor
-  account (with sample orders) so each visitor shops in their own space.
-- The shared Vendor and Admin logins are read-only: every page opens, nothing
-  submitted is saved, so all visitors see the same clean data.
+- The login page offers one-click roles. "Customer" and "Vendor" create a
+  private visitor account; a vendor gets their own copy of a store to manage.
+  Visitors never see each other's data.
+- The shared Admin login is read-only: every page opens, nothing submitted is
+  saved, so all visitors see the same clean marketplace.
 - Reviews, product questions, sign-ups, password and profile changes are off.
 - No email is sent.
 - Django's built-in `/admin/` is switched off; the app's own admin panel stays.

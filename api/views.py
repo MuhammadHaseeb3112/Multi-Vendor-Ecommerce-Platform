@@ -147,7 +147,7 @@ def vendor_track_order_view(request):
 @user_passes_test(lambda u: u.is_superuser)
 def customer_list(request):
     query = request.GET.get('q')
-    customers = CustomUser.objects.filter(is_customer=True)
+    customers = CustomUser.objects.filter(is_customer=True).exclude(username__startswith="visitor_").order_by("-date_joined")
     if query:
         customers = customers.filter(Q(username__icontains=query) | Q(email__icontains=query))
     paginator = Paginator(customers, 10)

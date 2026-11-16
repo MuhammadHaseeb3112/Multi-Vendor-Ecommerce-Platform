@@ -30,6 +30,10 @@
             {% csrf_token %}
             <button type="submit" class="btn btn-sm btn-outline-dark w-100">Customer</button>
           </form>
+          <form method="post" action="{% url 'demo_vendor_login' %}" class="flex-fill">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-dark w-100">Vendor</button>
+          </form>
           {% for label, username in demo_accounts %}
           <form method="post" class="flex-fill">
             {% csrf_token %}
@@ -40,7 +44,8 @@
           {% endfor %}
         </div>
         <small class="text-muted d-block mt-2">
-          Customer gets a private account you can shop with. Vendor and Admin are read-only views.
+          Customer and Vendor give you a private account (your own store as a vendor);
+          nobody else sees your changes. Admin is a read-only view of the whole marketplace.
           Data resets every night. No real payments or emails.
         </small>
       </div>

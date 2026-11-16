@@ -13,6 +13,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 
+from .sandbox import SandboxManager
+
 # Vendor documents: only PDFs and images (blocks .html/.svg/.exe uploads).
 DOCUMENT_VALIDATOR = FileExtensionValidator(['pdf', 'jpg', 'jpeg', 'png'])
 
@@ -31,6 +33,10 @@ class CustomUser(AbstractUser):
 # -------------------- Vendor --------------------
 class Vendor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='vendor', on_delete=models.CASCADE)
+
+    objects = SandboxManager('user')
+    all_objects = models.Manager()
+
     vendor_slug = models.SlugField(blank=True, null=True)
     slug = models.SlugField(blank=True, null=True)
     business_name = models.CharField(max_length=255)
@@ -92,6 +98,10 @@ class Withdrawal(models.Model):
     )
 
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+
+    objects = SandboxManager('vendor__user')
+    all_objects = models.Manager()
+
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     requested_at = models.DateTimeField(auto_now_add=True)
@@ -120,6 +130,10 @@ class Category(models.Model):
 # -------------------- Product --------------------
 class Product(models.Model):
     name = models.CharField(max_length=255)
+
+    objects = SandboxManager('vendor__user')
+    all_objects = models.Manager()
+
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     short_details = models.TextField()
@@ -138,7 +152,11 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            base = slugify(self.name)[:240] or "product"
+            slug, n = base, 2
+            while Product.all_objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug, n = f"{base}-{n}", n + 1
+            self.slug = slug
         super().save(*args, **kwargs)
 
     def average_rating(self):
@@ -360,6 +378,12 @@ class Order(models.Model):
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    # Demo only: the visitor this order belongs to (hidden from everyone else).
+    owner_visitor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='+')
+
+    objects = SandboxManager('owner_visitor')
+    all_objects = models.Manager()
+
     full_name = models.CharField(max_length=255)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
@@ -392,6 +416,10 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+
+    objects = SandboxManager('order__owner_visitor')
+    all_objects = models.Manager()
+
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     color = models.CharField(max_length=50, blank=True, null=True)
     size = models.CharField(max_length=50, blank=True, null=True)
@@ -404,6 +432,10 @@ class OrderItem(models.Model):
 
 class Payment(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
+
+    objects = SandboxManager('order__owner_visitor')
+    all_objects = models.Manager()
+
     card_number = models.CharField(max_length=20)  # Mask in production
     expiry = models.CharField(max_length=5)
     cvv = models.CharField(max_length=4, blank=True, default="")  # never stored (PCI-DSS)
@@ -421,3 +453,18 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.subject}"
+
+
+# Demo: orders placed by a visitor account belong to that visitor's sandbox.
+from django.db.models.signals import pre_save  # noqa: E402
+from django.dispatch import receiver  # noqa: E402
+
+from .sandbox import VISITOR_PREFIX  # noqa: E402
+
+
+@receiver(pre_save, sender=Order)
+def _tag_visitor_orders(sender, instance, **kwargs):
+    if instance.owner_visitor_id is None and instance.user_id:
+        user = instance.user
+        if user.username.startswith(VISITOR_PREFIX):
+            instance.owner_visitor = user

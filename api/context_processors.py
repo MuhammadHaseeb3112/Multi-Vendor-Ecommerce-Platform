@@ -23,10 +23,9 @@ def demo(request):
     return {
         "DEMO_MODE": True,
         "demo_password": settings.DEMO_PASSWORD,
-        # Customer gets a private account (demo_customer_login); vendor and
-        # admin are shared, read-only views.
+        # Customer and Vendor get private accounts (api/demoviews.py);
+        # Admin is a shared, read-only view of the whole marketplace.
         "demo_accounts": [
-            ("Vendor", "demo_vendor"),
             ("Admin", "demo_admin"),
         ],
     }
