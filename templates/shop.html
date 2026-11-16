@@ -3,7 +3,6 @@
 {% block content %}
 
 <!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
   .card-hover:hover {
@@ -35,7 +34,7 @@
   .price-tag {
     font-size: 1rem;
     font-weight: 600;
-    color: #28a745;
+    color: #198754;
   }
 </style>
 
@@ -70,7 +69,7 @@
           <!-- Sort -->
           <div class="mb-3">
             <h6 class="fw-semibold">Sort by</h6>
-            <select name="sort" class="form-select" onchange="this.form.submit()">
+            <select name="sort" class="form-select" aria-label="Sort products" onchange="this.form.submit()">
               <option value="">Default</option>
               <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
               <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>

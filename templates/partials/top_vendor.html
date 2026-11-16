@@ -60,7 +60,7 @@
             <img loading="lazy" decoding="async" src="{% if vendor.logo %}{{ vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}" class="vendor-logo" alt="{{ vendor.business_name }}">
             <strong>{{ vendor.business_name }}</strong>
           </div>
-          <p class="mb-1 text-muted small">({{ vendor.products.count }} Products)</p>
+          <p class="mb-1 text-muted small">({{ vendor.product_count }} Products)</p>
 
           <!-- Rating -->
           <div class="rating text-warning">
@@ -90,7 +90,7 @@
                 <img loading="lazy" decoding="async" src="{% if vendor.logo %}{{ vendor.logo.url }}{% else %}{% static 'images/default-user.png' %}{% endif %}" alt="{{ vendor.business_name }}" class="vendor-logo">
                 <div>
                   <h5 class="mb-1">{{ vendor.business_name }}</h5>
-                  <p class="text-muted small mb-0">{{ vendor.products.count }} Products</p>
+                  <p class="text-muted small mb-0">{{ vendor.product_count }} Products</p>
                 </div>
               </div>
 

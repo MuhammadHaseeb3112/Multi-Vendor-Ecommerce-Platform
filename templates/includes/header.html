@@ -33,7 +33,7 @@
         <li class="mb-1">
           <a class="dropdown-item d-flex align-items-center {% if category.id == selected_category_id %}active{% endif %}"
             href="?category={{ category.id }}">
-            <img src="{{ category.image.url }}" class="me-2 rounded-circle" width="28" height="28"
+            <img src="{{ category.image.url }}" class="me-2 rounded-circle" width="28" height="28" style="object-fit: cover;"
               alt="{{ category.name }}">
             {{ category.name }}
             {% if category.badge %}
@@ -64,7 +64,7 @@
     <!-- Icons -->
     <div class="d-flex align-items-center ms-3 gap-3">
       <!-- 🛒 Cart -->
-      <a href="#" id="cart-icon" class="text-dark position-relative" data-bs-toggle="offcanvas"
+      <a href="#" id="cart-icon" class="text-dark position-relative" aria-label="Cart" data-bs-toggle="offcanvas"
         data-bs-target="#cartSidebar">
         <i class="fas fa-shopping-cart fs-5"></i>
         {% if cart.total_items > 0 %}
@@ -240,8 +240,3 @@
     {% endif %}
   </div>
 </div>
-<script>
-
-  const tooltipTriggerList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')]
-  tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-</script>

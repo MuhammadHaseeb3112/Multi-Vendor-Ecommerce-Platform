@@ -160,9 +160,11 @@ class Product(models.Model):
         super().save(*args, **kwargs)
 
     def average_rating(self):
-        reviews = self.reviews.all()
-        if reviews.exists():
-            return round(sum([r.rating for r in reviews]) / reviews.count(), 1)
+        # One pass over self.reviews.all() so a prefetch_related('reviews')
+        # answers it without any extra query.
+        ratings = [r.rating for r in self.reviews.all()]
+        if ratings:
+            return round(sum(ratings) / len(ratings), 1)
         return 0
 
     def __str__(self):

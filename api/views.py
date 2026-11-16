@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Count, Prefetch, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
@@ -21,9 +21,15 @@ def chunk_list(lst, n):
 def home(request):
     top_vendors = Vendor.objects.annotate(
         product_count=Count('products')
-    ).order_by('-product_count')[:4]
+    ).order_by('-product_count').prefetch_related(
+        Prefetch('products', queryset=Product.objects.select_related('category', 'vendor'))
+    )[:4]
     # Works on a fresh database too: missing categories just give empty sections.
-    available = Product.objects.filter(is_available=True).select_related('category', 'vendor')
+    # select/prefetch the related rows the cards show (category, vendor, author,
+    # reviews for the star rating) so the page runs a handful of queries, not hundreds.
+    available = Product.objects.filter(is_available=True).select_related(
+        'category', 'vendor', 'created_by'
+    ).prefetch_related('reviews')
     featured_category = Category.objects.filter(slug='electronics').first()
     electronics_category = featured_category
     electronics_products = available.filter(category__slug="electronics")[:3]
@@ -55,13 +61,15 @@ def home(request):
     if selected_category_id:
         try:
             selected_category_id = int(selected_category_id)
-            products = Product.objects.filter(category__id=selected_category_id, is_available=True)
+            products = available.filter(category__id=selected_category_id)
         except ValueError:
-            products = Product.objects.filter(is_available=True)
+            products = available
             selected_category_id = None
     else:
-        products = Product.objects.filter(is_available=True)
+        products = available
         selected_category_id = None
+    # Evaluate once: the template loops over the products in more than one place.
+    products = list(products)
 
     for product in products:
         badge_label = random.choice(list(badge_options.keys()))
