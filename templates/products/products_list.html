@@ -30,27 +30,22 @@
   </div>
 </section>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+  // Refresh the product list when category checkboxes change (no jQuery needed).
   function fetchFilteredProducts() {
-    const selectedCategories = [];
-    $('input[name="category"]:checked').each(function() {
-      selectedCategories.push($(this).val());
+    const params = new URLSearchParams();
+    document.querySelectorAll('input[name="category"]:checked').forEach(function (box) {
+      params.append('categories[]', box.value);
     });
-
-    $.ajax({
-      url: "{% url 'ajax_filter_products' %}",
-      data: {
-        'categories[]': selectedCategories
-      },
-      success: function(data) {
-        $('#productContainer').html(data.html);
-      }
-    });
+    fetch("{% url 'ajax_filter_products' %}?" + params.toString())
+      .then(function (res) { return res.json(); })
+      .then(function (data) { document.getElementById('productContainer').innerHTML = data.html; });
   }
 
-  $(document).ready(function() {
-    $('.category-filter').on('change', fetchFilteredProducts);
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.category-filter').forEach(function (box) {
+      box.addEventListener('change', fetchFilteredProducts);
+    });
   });
 </script>
 {% endblock %}

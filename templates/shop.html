@@ -47,6 +47,7 @@
 
         <!-- Search -->
         <form method="get">
+          {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
           <div class="mb-4">
             <input type="text" name="q" value="{{ request.GET.q }}" class="form-control rounded" placeholder="🔍 Search products...">
           </div>
@@ -55,10 +56,10 @@
           <div class="mb-4">
             <h6 class="fw-semibold">Categories</h6>
             <ul class="list-unstyled">
-              <li><a href="{% url 'shop' %}" class="text-decoration-none {% if not selected_category %}fw-bold text-primary{% endif %}">All</a></li>
+              <li><a href="{% url 'shop' %}{% if request.GET.q or request.GET.sort %}?q={{ request.GET.q|urlencode }}&amp;sort={{ request.GET.sort|urlencode }}{% endif %}" class="text-decoration-none {% if not selected_category %}fw-bold text-primary{% endif %}">All</a></li>
               {% for category in categories %}
                 <li>
-                  <a href="?category={{ category.id }}" class="text-decoration-none {% if selected_category == category.id %}fw-bold text-primary{% endif %}">
+                  <a href="?category={{ category.id }}{% if request.GET.q %}&amp;q={{ request.GET.q|urlencode }}{% endif %}{% if request.GET.sort %}&amp;sort={{ request.GET.sort|urlencode }}{% endif %}" class="text-decoration-none {% if selected_category == category.id %}fw-bold text-primary{% endif %}">
                     {{ category.name }}
                   </a>
                 </li>

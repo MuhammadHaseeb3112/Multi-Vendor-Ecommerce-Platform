@@ -113,7 +113,7 @@ def search_products(request):
     if query:
         products = products.filter(name__icontains=query)
 
-    if category_id:
+    if category_id.isdigit():
         products = products.filter(category_id=category_id)
 
     categories = Category.objects.all()

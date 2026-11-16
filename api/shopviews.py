@@ -1,22 +1,36 @@
+from django.db.models import Q
 from django.shortcuts import render
 
 from .models import Category, Product
 
 
+def _category_id(value):
+    """The ?category= value as an int, or None when missing or not a number."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
 def shop_view(request):
-    products = Product.objects.filter(is_available=True)
+    products = Product.objects.filter(is_available=True).select_related('category')
     categories = Category.objects.all()
-    selected_category = request.GET.get('category')
-    search_query = request.GET.get('q')
+    selected_category = _category_id(request.GET.get('category'))
+    search_query = (request.GET.get('q') or '').strip()
     sort_by = request.GET.get('sort')
 
     # Filter by category
     if selected_category:
         products = products.filter(category_id=selected_category)
 
-    # Search
+    # Search: product name, brand, short description or category name
     if search_query:
-        products = products.filter(name__icontains=search_query)
+        products = products.filter(
+            Q(name__icontains=search_query)
+            | Q(brand__icontains=search_query)
+            | Q(short_details__icontains=search_query)
+            | Q(category__name__icontains=search_query)
+        )
 
     # Sorting
     if sort_by == 'price_low':
@@ -27,6 +41,7 @@ def shop_view(request):
     context = {
         'products': products,
         'categories': categories,
-        'selected_category': int(selected_category) if selected_category else None,
+        'selected_category': selected_category,
+        'search_query': search_query,
     }
     return render(request, 'shop.html', context)
