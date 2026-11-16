@@ -159,23 +159,28 @@
 </nav>
 
 <!--  Modern Login Modal -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 rounded-4 shadow-lg">
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title fw-bold" id="loginModalLabel">Welcome Back!</h5>
+        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
+      </div>
+      {% if DEMO_MODE %}
+      <div class="px-4 pt-1">
+        {% include 'includes/demo_login_box.html' %}
+      </div>
+      {% endif %}
       <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}
-        <div class="modal-header border-bottom-0">
-          <h5 class="modal-title fw-bold">Welcome Back!</h5>
-          <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body py-4 px-4">
+        <div class="modal-body {% if DEMO_MODE %}pt-0{% else %}py-4{% endif %} pb-4 px-4">
           <div class="mb-3">
-            <label class="form-label">Username or Email</label>
-            <input type="text" class="form-control rounded-3" name="username" required>
+            <label class="form-label" for="modal-username">Username or Email</label>
+            <input type="text" class="form-control rounded-3" id="modal-username" name="username" autocomplete="username" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input type="password" class="form-control rounded-3" name="password" required>
+            <label class="form-label" for="modal-password">Password</label>
+            <input type="password" class="form-control rounded-3" id="modal-password" name="password" autocomplete="current-password" required>
           </div>
           <div class="form-text text-end mb-3">
             <a href="{% url 'password_reset'%}" class="text-decoration-none">Forgot Password?</a>
@@ -183,7 +188,7 @@
           <button type="submit" class="btn btn-danger w-100 rounded-pill py-2">Login</button>
         </div>
         <div class="modal-footer border-top-0 text-center">
-          <small>Don't have an account? <a href="#" class="text-danger">Sign up</a></small>
+          <small>Don't have an account? <a href="{% url 'register_customer' %}" class="text-danger">Sign up</a></small>
         </div>
       </form>
     </div>

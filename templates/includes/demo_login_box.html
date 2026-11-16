@@ -1,0 +1,29 @@
+{# Demo login buttons, shown on the login page and in the header login modal. #}
+{% if DEMO_MODE %}
+<div class="alert alert-info rounded-4 text-start">
+  <strong>Live demo.</strong> Pick a role to look around:
+  <div class="d-flex gap-2 mt-2">
+    <form method="post" action="{% url 'demo_customer_login' %}" class="flex-fill">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-sm btn-outline-dark w-100">Customer</button>
+    </form>
+    <form method="post" action="{% url 'demo_vendor_login' %}" class="flex-fill">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-sm btn-outline-dark w-100">Vendor</button>
+    </form>
+    {% for label, username in demo_accounts %}
+    <form method="post" action="{% url 'login' %}" class="flex-fill">
+      {% csrf_token %}
+      <input type="hidden" name="username" value="{{ username }}">
+      <input type="hidden" name="password" value="{{ demo_password }}">
+      <button type="submit" class="btn btn-sm btn-outline-dark w-100">{{ label }}</button>
+    </form>
+    {% endfor %}
+  </div>
+  <small class="text-muted d-block mt-2">
+    Customer and Vendor give you a private account (your own store as a vendor);
+    nobody else sees your changes. Admin is a read-only view of the whole marketplace.
+    Data resets every night. No real payments or emails.
+  </small>
+</div>
+{% endif %}
